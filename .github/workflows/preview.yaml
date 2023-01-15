@@ -23,8 +23,7 @@ jobs:
         name: Create GitHub deployment
         id: deployment
         with:
-          token: '${{ github.token }}'
-          environment-url: http://my-app-url.com 
+          token: "${{ github.token }}"
+          environment-url: https://stycker.vercel.app/
           #replace with deployment url
           environment: preview
-        
