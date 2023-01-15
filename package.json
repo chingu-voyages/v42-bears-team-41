@@ -1,0 +1,22 @@
+{
+  "name": "stycker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "npx prettier --check ."
+  },
+  "dependencies": {
+    "@next/font": "13.1.2",
+    "eslint": "8.31.0",
+    "eslint-config-next": "13.1.2",
+    "next": "13.1.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "prettier": "2.8.3"
+  }
+}
