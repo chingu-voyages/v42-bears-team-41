@@ -29,7 +29,7 @@ jobs:
           #replace with deployment url
           environment: preview
           initial-status: "success"
-          - uses: chrnorm/deployment-action@v2
+      - uses: chrnorm/deployment-action@v2
         name: Create GitHub deployment
         if: ${{ failure() }}
         id: deployment-failure
