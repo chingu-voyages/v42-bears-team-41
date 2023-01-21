@@ -1,4 +1,4 @@
-import DaisyUI from "daisyui";
+const DaisyUI = require("daisyui");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
