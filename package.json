@@ -19,6 +19,7 @@
     "react-stack-grid": "^0.7.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
