@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 export function createSampleStyckerCardData() {
   return {
     user: {
-      name: faker.name,
+      name: faker.name.fullName(),
       //avatar_url: ???
     },
     title: faker.company.name(),
@@ -12,7 +12,7 @@ export function createSampleStyckerCardData() {
 }
 export function createSampleStyckerCardDataArray(numberOfItems) {
   let sampleStyckerCardDataArray = [];
-  for (let i = 0; i < numberOfItems; i++)
+  for (let i = 0; i < numberOfItems; i = i + 1)
     sampleStyckerCardDataArray.push(createSampleStyckerCardData());
   return sampleStyckerCardDataArray;
 }
