@@ -13,7 +13,7 @@ export default function ExplorePage() {
         </h1>
       </Center>
       <Center className="mt-8">
-        <p className="w-4/12 text-center text-lg">
+        <p className="w-6/12 text-center text-lg">
           Find the very best ideas made by normal people like you! Lorem ipsum
           dolor sit amet, consectetur adipiscing elit. Quisque et vulputate
           dolor, at convallis felis. Vestibulum luctus iaculis suscipit. Sed
@@ -26,18 +26,24 @@ export default function ExplorePage() {
           diam, molestie egestas sem semper consequat. Aenean nec lorem erat.
         </p>
       </Center>
-      <DividerArea className="h-14 mt-12 sticky top-0 z-10">
+      <DividerArea className="h-14 sticky top-0 z-10">
         <Center>
           <div className="w-10/12 relative">
             <div className="absolute left-0">a</div>
-            <div className="absolute ">b</div>
-            <div className="absolute right-0">c</div>
+            <div className="absolute inset-x-1/2">b</div>
+            <div className="absolute right-0 mr-4">
+              <select className="select select-accent w-full max-w-xs ">
+                <option>Date created</option>
+                <option>Views</option>
+                <option>Placeholder</option>
+              </select>
+            </div>
           </div>
         </Center>
       </DividerArea>
       <Center className="mt-12">
         <div className="w-10/12">
-          <StackGrid columnWidth={"21%"} gutterHeight={40}>
+          <StackGrid columnWidth={"30%"} gutterHeight={40}>
             {createSampleStyckerCardDataArray(20).map(
               (sampleStyckerCardData) => {
                 return (
