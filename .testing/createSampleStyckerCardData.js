@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 
 export function createSampleStyckerCardData() {
   return {
+    id: faker.datatype.uuid(),
     user: {
       name: faker.name.fullName(),
       //avatar_url: ???
