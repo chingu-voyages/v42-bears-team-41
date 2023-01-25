@@ -1,4 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
+
+import useDimensions from "react-cool-dimensions";
+
+/**
+ * Does something nifty.
+ *
+ * @param   props  An object containing the `title`, `description` and `user` displayed in the StyckerCard, as well as an `id` for identifying the StyckerCard. A `user` has a `name` and an optional `avatar_url`.
+ * @returns The StyckerCard component
+ */
 export function StyckerCard(props) {
   return (
     <>
@@ -48,5 +57,27 @@ export function StyckerCard(props) {
         */}
       </div>
     </>
+  );
+}
+/**
+ * Wraps a StyckerCard in a wrapper that has a fixed height which fluctuates to fit the card
+ *
+ * @param   props The parameters to pass to the StyckerCard
+ * @returns A StyckerCard component in a wrapper that has a fixed height which fluctuates to fit the card
+ */
+export function StyckerCardWithFixedAdjustableHeight(props) {
+  const { observe, height } = useDimensions({
+    onResize: ({ observe, unobserve, width, height, entry }) => {
+      // Triggered whenever the size of the target is changed...
+
+      unobserve(); // To stop observing the current target element
+      observe(); // To re-start observing the current target element
+    },
+  });
+
+  return (
+    <div style={{ height: `${height}px` }}>
+      <StyckerCard ref={observe} {...props} />
+    </div>
   );
 }
