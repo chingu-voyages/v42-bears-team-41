@@ -8,7 +8,7 @@ import useDimensions from "react-cool-dimensions";
  * @param   props  An object containing the `title`, `description` and `user` displayed in the StyckerCard, as well as an `id` for identifying the StyckerCard. A `user` has a `name` and an optional `avatar_url`.
  * @returns The StyckerCard component
  */
-export function StyckerCard(props) {
+export function StyckerCard({ title, description, user, tags }) {
   return (
     <>
       <div className="card card-bordered card-compact w-fit h-fit pb-2 px-1 bg-base-100 shadow-xl border-secondary">
@@ -18,16 +18,16 @@ export function StyckerCard(props) {
               <div class="flex flex-col w-12">
                 <div className="avatar flex justify-center">
                   <div className="w-12 rounded">
-                    {props.user.avatar_url ? (
+                    {user.avatar_url ? (
                       <img
-                        src={props.user.avatar_url}
-                        alt={`${props.user.name}'s avatar`}
+                        src={user.avatar_url}
+                        alt={`${user.name}'s avatar`}
                       />
                     ) : (
                       <div className="avatar placeholder">
                         <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
                           <span className="text-2xl">
-                            {`${props.user.name}`.charAt(0).toUpperCase()}
+                            {`${user.name}`.charAt(0).toUpperCase()}
                           </span>
                         </div>
                       </div>
@@ -35,13 +35,13 @@ export function StyckerCard(props) {
                   </div>
                 </div>
                 <h4 className="mt-2 text-center text-sm font-semibold">
-                  {props.user.name}
+                  {user.name}
                 </h4>
               </div>
             </div>
             <div className="flex-auto w-72">
-              <h2 className="card-title">{props.title}</h2>
-              <p>{props.description}</p>
+              <h2 className="card-title">{title}</h2>
+              <p>{description}</p>
             </div>
           </div>
         </div>
