@@ -30,8 +30,8 @@ export default function Home() {
               className="flex-auto w rounded-xl  border border-neutral bg-base-300"
               style={{
                 backgroundImage:
-                  "radial-gradient(circle at 2px 2px, grey 1px, transparent 0)",
-                backgroundSize: "15px 15px",
+                  "radial-gradient(circle at 2px 2px, hsl(var(--nf)) 1px, transparent 0)",
+                backgroundSize: "12px 12px",
               }}
             >
               <div className="px-4 py-4 ">
