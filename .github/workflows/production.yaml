@@ -27,7 +27,7 @@ jobs:
           token: "${{ github.token }}"
           environment-url: https://stycker.vercel.app/
           #replace with deployment url
-          environment: preview
+          environment: production
           initial-status: "success"
       - uses: chrnorm/deployment-action@v2
         name: Create GitHub deployment
@@ -37,5 +37,5 @@ jobs:
           token: "${{ github.token }}"
           environment-url: https://stycker.vercel.app/
           #replace with deployment url
-          environment: preview
+          environment: production
           initial-status: "error"
