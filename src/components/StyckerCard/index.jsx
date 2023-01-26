@@ -1,6 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { AspectRatio } from "react-aspect-ratio";
+import "react-aspect-ratio/aspect-ratio.css";
 import useDimensions from "react-cool-dimensions";
+import { Badge } from "../Badge";
 
 /**
  * Does something nifty.
@@ -8,14 +11,14 @@ import useDimensions from "react-cool-dimensions";
  * @param   props  An object containing the `title`, `description` and `user` displayed in the StyckerCard, as well as an `id` for identifying the StyckerCard. A `user` has a `name` and an optional `avatar_url`.
  * @returns The StyckerCard component
  */
-export function StyckerCard({ title, description, user, tags }) {
+export function StyckerCard({ title, description, user, tags, image }) {
   return (
     <>
       <div className="card card-bordered card-compact w-fit h-fit pb-2 px-1 bg-base-100 shadow-xl border-secondary">
         <div className="card-body">
           <div className="flex">
-            <div className="flex auto w-18 mr-6 mt-2">
-              <div class="flex flex-col w-12">
+            <div className="flex auto w-18 mr-4 mt-2">
+              <div class="flex flex-col w-16">
                 <div className="avatar flex justify-center">
                   <div className="w-12 rounded">
                     {user.avatar_url ? (
@@ -34,27 +37,53 @@ export function StyckerCard({ title, description, user, tags }) {
                     )}
                   </div>
                 </div>
-                <h4 className="mt-2 text-center text-sm font-semibold">
+                <h4
+                  className="mt-2 text-center text-sm font-semibold"
+                  style={{ hyphens: "auto", wordBreak: "break-word" }}
+                >
                   {user.name}
                 </h4>
               </div>
             </div>
-            <div className="flex-auto w-72">
+            <div className="flex-auto w-[17.5rem]">
+              {image ? (
+                <div className="pb-4">
+                  <AspectRatio
+                    ratio="16/9"
+                    style={{
+                      maxWidth: "18rem" /* equivalent of tailwindCSS w-72 */,
+                    }}
+                  >
+                    <img
+                      className="rounded-xl"
+                      src={image}
+                      alt={`Cover Image for ${title}`}
+                    />
+                  </AspectRatio>
+                </div>
+              ) : (
+                <></>
+              )}
               <h2 className="card-title">{title}</h2>
               <p>{description}</p>
             </div>
           </div>
-        </div>
-        {/*
-        <div className="card-actions justify-center">
-          <div className="btn-group">
-            <button className="btn btn-active">Button</button>
-            <button className="btn">Button</button>
-
-            <button className="btn">Button</button>
+          <div>
+            {tags ? (
+              <div className="flex flex-wrap mt-6 w-[22.5rem]">
+                {tags.map((tag) => {
+                  return (
+                    <Badge color={"purple"} key={tag.text}>
+                      {tag.text}
+                    </Badge>
+                  );
+                })}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
-        */}
       </div>
     </>
   );

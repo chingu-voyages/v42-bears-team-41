@@ -6,11 +6,11 @@ labels: task
 assignees: ""
 ---
 
-****Task Description****
+\***\*Task Description\*\***
 Describe the task to be completed.
 
-****Technical Considerations****
+\***\*Technical Considerations\*\***
 Include any technical considerations including architecture (e.g. API), required libraries, etc.
 
-****Additional Considerations****
+\***\*Additional Considerations\*\***
 Any supplemental information including unresolved questions, links to external resources, screenshots, etc.

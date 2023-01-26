@@ -5,6 +5,7 @@ import StackGrid from "react-stack-grid";
 import { createSampleStyckerCardDataArray } from "../../.testing/createSampleStyckerCardData";
 import Select from "react-tailwindcss-select";
 import { useState } from "react";
+import SelectStyle from "@/styles/SelectStyle";
 
 const filterValues = [
   { value: "fox", label: "🦊 Fox" },
@@ -16,6 +17,10 @@ const sortByValues = [
   { value: "views", label: "Views" },
   { value: "placeholder", label: "Placeholder" },
 ];
+
+// DO NOT PUSH TO PROD
+const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
+
 export default function ExplorePage() {
   const [filters, setFilters] = useState(null);
 
@@ -28,6 +33,8 @@ export default function ExplorePage() {
   const handleSortByValueChange = (value) => {
     setSortByValue(value);
   };
+
+  const [styckerData] = useState(sampleStyckerCardDataArray);
 
   return (
     <>
@@ -50,7 +57,7 @@ export default function ExplorePage() {
           diam, molestie egestas sem semper consequat. Aenean nec lorem erat.
         </p>
       </Center>
-      <DividerArea className="h-14 mt-6 sticky top-0 z-10 border-y border-accent">
+      <DividerArea className="bg-base-100 h-14 sticky mt-12 top-0 z-10 border-y border-base-content border-dashed">
         <Center className={"mt-2"}>
           <div className="w-10/12 relative">
             <div className="h-12 absolute left-0">
@@ -60,35 +67,7 @@ export default function ExplorePage() {
                 options={filterValues}
                 isMultiple
                 isSearchable
-                classNames={{
-                  menuButton: ({ isDisabled }) =>
-                    `flex text-sm text-neutral-content border border-gray-300 rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                      isDisabled
-                        ? "bg-gray-200"
-                        : "bg-base-100  focus:border-accent-focus focus:ring focus:ring-blue-500/20" // Removed hover:border-accent because of bug
-                    }`,
-                  menu: "absolute z-10 w-full bg-base-100 shadow-lg border border-accent rounded py-1 mt-1.5 text-sm text-neutral-content",
-                  searchBox:
-                    "w-full py-2 pl-8 text-sm text-gray-500 bg-base-100 border border-accent rounded focus:border-accent-focus focus:ring-0 focus:outline-none",
-                  listItem: ({ isSelected }) =>
-                    `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                      isSelected
-                        ? `text-neutral-content bg-blue-500`
-                        : `text-neutral-content hover:bg-base-content hover:text-neutral`
-                    }`,
-                  tagItemText:
-                    "text-neutral-content truncate cursor-default select-none",
-                  tagItem: ({ isDisabled }) => {
-                    const baseClass =
-                      "bg-base-100 border rounded-sm flex space-x-1";
-                    const disabledClass = isDisabled
-                      ? "border-gray-500 px-1"
-                      : "pl-1";
-                    return `${baseClass} ${disabledClass}`;
-                  },
-                  tagItemIconContainer:
-                    "flex items-center px-1 cursor-pointer rounded-r-sm  hover:text-error",
-                }}
+                classNames={SelectStyle}
               />
             </div>
             <div className="absolute inset-x-1/2">
@@ -101,35 +80,7 @@ export default function ExplorePage() {
                 value={sortByValue}
                 onChange={handleSortByValueChange}
                 options={sortByValues}
-                classNames={{
-                  menuButton: ({ isDisabled }) =>
-                    `flex text-sm text-neutral-content border border-gray-300 rounded shadow-sm transition-all duration-300 focus:outline-none ${
-                      isDisabled
-                        ? "bg-gray-200"
-                        : "bg-base-100  focus:border-accent-focus focus:ring focus:ring-blue-500/20" // Removed hover:border-accent because of bug
-                    }`,
-                  menu: "absolute z-10 w-full bg-base-100 shadow-lg border border-accent rounded py-1 mt-1.5 text-sm text-neutral-content",
-                  searchBox:
-                    "w-full py-2 pl-8 text-sm text-gray-500 bg-base-100 border border-accent rounded focus:border-accent-focus focus:ring-0 focus:outline-none",
-                  listItem: ({ isSelected }) =>
-                    `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
-                      isSelected
-                        ? `text-info-content bg-info`
-                        : `text-neutral-content hover:bg-base-content hover:text-neutral`
-                    }`,
-                  tagItemText:
-                    "text-neutral-content truncate cursor-default select-none",
-                  tagItem: ({ isDisabled }) => {
-                    const baseClasse =
-                      "bg-base-100 border rounded-sm flex space-x-1";
-                    const disabledClass = isDisabled
-                      ? "border-gray-500 px-1"
-                      : "pl-1";
-                    return `${baseClasse} ${disabledClass}`;
-                  },
-                  tagItemIconContainer:
-                    "flex items-center px-1 cursor-pointer rounded-r-sm  hover:text-error",
-                }}
+                classNames={SelectStyle}
               />
               {
                 // Default DaisyUI Select, unused
@@ -145,20 +96,23 @@ export default function ExplorePage() {
       </DividerArea>
       <Center className="mt-12">
         <div className="w-10/12">
-          <StackGrid columnWidth={"30%"} gutterHeight={40}>
-            {createSampleStyckerCardDataArray(20).map(
-              (sampleStyckerCardData) => {
-                return (
-                  <div key={sampleStyckerCardData.id}>
-                    <StyckerCardWithFixedAdjustableHeight
-                      user={{ name: sampleStyckerCardData.user.name }}
-                      title={sampleStyckerCardData.title}
-                      description={sampleStyckerCardData.description}
-                    />
-                  </div>
-                );
-              }
-            )}
+          <StackGrid columnWidth={"30%"} gutterHeight={25}>
+            {styckerData.map((cardData) => {
+              return (
+                <div key={cardData.id}>
+                  <StyckerCardWithFixedAdjustableHeight
+                    image={cardData.image}
+                    user={{
+                      name: cardData.user.name,
+                      avatar_url: cardData.user.avatar_url,
+                    }}
+                    title={cardData.title}
+                    description={cardData.description}
+                    tags={cardData.tags}
+                  />
+                </div>
+              );
+            })}
           </StackGrid>
           <div className="mt-10"></div>
         </div>

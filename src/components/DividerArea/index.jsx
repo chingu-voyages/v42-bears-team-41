@@ -1,6 +1,6 @@
 export function DividerArea({ className, children, ...props }) {
   return (
-    <div className={`bg-base-200 ${className}`} {...props}>
+    <div className={`${className}`} {...props}>
       {children}
     </div>
   );
