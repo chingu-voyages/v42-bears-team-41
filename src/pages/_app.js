@@ -1,6 +1,6 @@
 import { ThemeProvider, useTheme } from "@/components/Theme/state";
 import { ThemeToggle } from "@/components/Theme/ThemeToggle";
-import { DarkTheme, LightTheme } from "@/config/defaults.config";
+import { BaseStyle, DarkTheme, LightTheme } from "@/config/defaults.config";
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }) {
@@ -13,8 +13,6 @@ export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider defaultTheme={dark ? DarkTheme : LightTheme}>
       <DaisyThemeSetter>
-        <div style={{ visibility: "hidden" }}>a</div>
-
         <ThemeToggle className="absolute top-0 right-0 mt-4 mr-4" />
         <Component {...pageProps} />
       </DaisyThemeSetter>
@@ -24,5 +22,9 @@ export default function App({ Component, pageProps }) {
 
 function DaisyThemeSetter({ children }) {
   const { theme } = useTheme();
-  return <div data-theme={theme}>{children}</div>;
+  return (
+    <div data-theme={theme}>
+      <div className={BaseStyle}>{children}</div>
+    </div>
+  );
 }
