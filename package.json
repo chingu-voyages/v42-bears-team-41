@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@next/font": "13.1.2",
+    "@tabler/icons-react": "^2.1.1",
     "@tailwindcss/typography": "^0.5.9",
     "daisyui": "^2.47.0",
     "eslint-config-next": "13.1.2",
     "next": "13.1.2",
     "react": "18.2.0",
+    "react-aspect-ratio": "^1.1.4",
     "react-cool-dimensions": "^3.0.0",
     "react-dom": "18.2.0",
     "react-sizeme": "^3.0.2",
