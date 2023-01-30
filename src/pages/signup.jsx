@@ -11,7 +11,7 @@ export default function LoginPage() {
             <h1 className="text-4xl font-bold">
               Welcome to <span className="text-accent">Stycker</span>!
             </h1>
-            <h2 className="text-xl mt-2">Sign in to your account</h2>
+            <h2 className="text-xl mt-2">Sign up to your account</h2>
             <div className="mt-4 form-control w-full max-w-xs">
               <label className="label">
                 <span className="label-text">Username</span>
@@ -35,7 +35,7 @@ export default function LoginPage() {
             </div>
 
             <button className="mt-6 btn btn-block btn-secondary max-w-xs">
-              Sign In
+              Sign Up
             </button>
           </div>
           <div className="divider my-6">OR</div>
