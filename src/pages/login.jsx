@@ -1,4 +1,3 @@
-import Center from "@/components/Center";
 import { GithubLogo } from "@/components/Logo/Github";
 import { GoogleLogo } from "@/components/Logo/Google";
 
