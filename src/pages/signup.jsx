@@ -1,5 +1,6 @@
 import { GithubLogo } from "@/components/Logo/Github";
 import { GoogleLogo } from "@/components/Logo/Google";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -36,6 +37,10 @@ export default function LoginPage() {
             <button className="mt-6 btn btn-block btn-secondary max-w-xs">
               Sign Up
             </button>
+
+            <Link href="/login" className="link text-sm mt-4">
+              Already have an account? Log In
+            </Link>
           </div>
           <div className="divider my-6">OR</div>
           <div className="grid h-36 card rounded-box place-items-center">
