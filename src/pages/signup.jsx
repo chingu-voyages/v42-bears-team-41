@@ -14,7 +14,7 @@ export default function LoginPage() {
             <h2 className="text-xl mt-2">Sign up to your account</h2>
             <div className="mt-4 form-control w-full max-w-xs">
               <label className="label">
-                <span className="label-text">Username</span>
+                <span className="label-text">Email</span>
               </label>
               <input
                 type="text"

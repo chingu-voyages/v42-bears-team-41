@@ -1,8 +1,38 @@
 import { GithubLogo } from "@/components/Logo/Github";
 import { GoogleLogo } from "@/components/Logo/Google";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const session = useSession();
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+
+  // The following function checks to see if the user is already logged in
+  // The session bracket ensures the function is only called when the session changes
+  // If the user is already logged in, our temporary solution is to redirect them to the explore page
+  useState(() => {
+    if (session) router.push("/explore");
+  }, [session]);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function logIn() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      alert(error.message);
+    }
+    if (data?.user?.id) {
+      alert("success");
+    }
+  }
+
   return (
     <div className="flex h-screen">
       <div class="m-auto">
@@ -14,11 +44,15 @@ export default function LoginPage() {
             <h2 className="text-xl mt-2">Sign in to your account</h2>
             <div className="mt-4 form-control w-full max-w-xs">
               <label className="label">
-                <span className="label-text">Username</span>
+                <span className="label-text">Email</span>
               </label>
               <input
                 type="text"
                 placeholder="Type here"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
                 className="input input-bordered ring-transparent focus:border-secondary w-full max-w-xs focus:outline-0"
               />
             </div>
@@ -29,12 +63,19 @@ export default function LoginPage() {
               </label>
               <input
                 type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
                 placeholder="••••••••"
                 className="input input-bordered ring-transparent focus:border-secondary w-full max-w-xs focus:outline-0"
               />
             </div>
 
-            <button className="mt-6 btn btn-block btn-secondary max-w-xs">
+            <button
+              onClick={logIn}
+              className="mt-6 btn btn-block btn-secondary max-w-xs"
+            >
               Sign In
             </button>
 
