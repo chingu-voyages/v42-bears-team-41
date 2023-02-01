@@ -43,7 +43,7 @@ This project includes:
 - daisyUI
 - eslint-config-next
 - Prettier
-- Tabler Icons
+
 
 ### 📚 Resources and References
 
