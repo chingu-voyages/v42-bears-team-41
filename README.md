@@ -43,7 +43,7 @@ This project includes:
 - daisyUI
 - eslint-config-next
 - Prettier
-
+- react-stack-grid
 
 ### 📚 Resources and References
 
