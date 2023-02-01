@@ -1,21 +1,20 @@
-# Stycker Application 
+# Stycker Application
 
 A place where developers can come together, like moths to a flame, to share their love of code! A place where you can find a project to contribute to, or create one of your own and watch as others flock to your side.
 
 ### ✨ Features
 
 This project includes:
-- Ability to create account and post projects 
+
+- Ability to create account and post projects
 - Explore page where user can search for projects
 - Ability to contribute to projects
-- Post project page 
-
+- Post project page
 
 ### ⚡️ Getting Started
 
 - Clone this project locally
 - Install the dependencies by running `npm install `
-
 
 - You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
@@ -33,8 +32,7 @@ This project includes:
 
 ### 🔗 Link to the Live App
 
- - [Stycker](https://stycker.vercel.app/)
-
+- [Stycker](https://stycker.vercel.app/)
 
 ## Dependencies
 
@@ -47,9 +45,8 @@ This project includes:
 - Prettier
 - Tabler Icons
 
-
 ### 📚 Resources and References
+
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 - Project in managed in Trello. Reach out to a member of the team to gain access.
-
