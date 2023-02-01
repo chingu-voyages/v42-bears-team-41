@@ -1,4 +1,4 @@
-# Stycker Application
+# Stycker 
 
 A place where developers can come together, like moths to a flame, to share their love of code! A place where you can find a project to contribute to, or create one of your own and watch as others flock to your side.
 
