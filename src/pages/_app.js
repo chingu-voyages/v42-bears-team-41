@@ -42,7 +42,7 @@ function DaisyThemeSetter({ children }) {
   const { theme } = useTheme();
   return (
     <div data-theme={theme}>
-      <div className={"bg-base-100 h-full w-full min-h-screen"}>{children}</div>
+      <div className={BaseStyle}>{children}</div>
     </div>
   );
 }

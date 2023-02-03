@@ -41,7 +41,7 @@ export default function ResetPasswordPage() {
         if (error) alert("There was an error updating your password.");
       }
     });
-  }, []);
+  }, [supabase.auth]);
 
   return (
     <div className="flex h-screen">
