@@ -3,7 +3,7 @@ import { GoogleLogo } from "@/components/Logo/Google";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const session = useSession();
@@ -13,9 +13,9 @@ export default function LoginPage() {
   // The following function checks to see if the user is already logged in
   // The session bracket ensures the function is only called when the session changes
   // If the user is already logged in, our temporary solution is to redirect them to the explore page
-  useState(() => {
+  useEffect(() => {
     if (session) router.push("/explore");
-  }, [session]);
+  }, [router, session]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,14 +29,25 @@ export default function LoginPage() {
       alert(error.message);
     }
     if (data?.user?.id) {
-      alert("success");
+      // Code to run on successful login
+    }
+  }
+  async function logInWithGitHub() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+    if (error) {
+      alert(error.message);
+    }
+    if (data?.user?.id) {
+      // Code to run on successful login
     }
   }
 
   return (
     <div className="flex h-screen">
-      <div class="m-auto">
-        <div className="drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-8">
+      <div className="m-auto">
+        <div className="drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-6">
           <div className="grid card rounded-box place-items-center">
             <h1 className="text-4xl font-bold">
               Welcome to <span className="text-accent">Stycker</span>!
@@ -96,7 +107,10 @@ export default function LoginPage() {
                 </div>
               </div>
             </button>
-            <button className="h-8 btn btn-block btn btn-outline btn-secondary max-w-xs ">
+            <button
+              onClick={logInWithGitHub}
+              className="h-8 btn btn-block btn btn-outline btn-secondary max-w-xs "
+            >
               <div className="relative flex justify-center h-full w-full">
                 <GithubLogo className="flex-none relative my-auto w-5 h-5" />
                 <div className="flex-none relative my-auto  ml-3">
