@@ -8,8 +8,13 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ defaultTheme, children }) => {
-  const [theme, setTheme] = useState(defaultTheme);
+  const [theme, setThemeOrigin] = useState(defaultTheme);
   const mode = theme === DarkTheme ? "dark" : "light";
+
+  const setTheme = (theme) => {
+    setThemeOrigin(theme);
+    localStorage.setItem("theme", theme);
+  };
 
   const toggleTheme = () => {
     setTheme(mode === "dark" ? LightTheme : DarkTheme);
