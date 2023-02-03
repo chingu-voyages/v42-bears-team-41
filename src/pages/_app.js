@@ -2,7 +2,6 @@ import { ThemeProvider, useTheme } from "@/components/Theme/state";
 import { ThemeToggle } from "@/components/Theme/ThemeToggle";
 import { DarkTheme, LightTheme } from "@/config/defaults.config";
 import Layout from "@/components/Layout";
-
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }) {
