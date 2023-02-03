@@ -7,6 +7,7 @@ export default function Home() {
 
   return (
     <>
+    <div className="-mt-6">   {/* fix awkward white spacing on top of welcome page */}
       <div className="hero min-h-screen bg-base-100">
         <div className="hero-content pr-8">
           <div className="flex">
@@ -57,6 +58,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 }
