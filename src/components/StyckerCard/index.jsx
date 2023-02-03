@@ -18,7 +18,7 @@ export function StyckerCard({ title, description, user, tags, image }) {
         <div className="card-body">
           <div className="flex">
             <div className="flex auto w-18 mr-4 mt-2">
-              <div class="flex flex-col w-16">
+              <div className="flex flex-col w-16">
                 <div className="avatar flex justify-center">
                   <div className="w-12 rounded">
                     {user.avatar_url ? (
