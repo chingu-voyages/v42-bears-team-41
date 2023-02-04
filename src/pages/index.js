@@ -1,11 +1,14 @@
 import { StyckerCard } from "@/components/StyckerCard";
+import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
 
 export default function Home() {
+  const { mode } = useTheme();
+
   return (
     <>
     <div className="-mt-6">   {/* fix awkward white spacing on top of welcome page */}
-      <div className="hero min-h-screen bg-base-200">
+      <div className="hero min-h-screen bg-base-100">
         <div className="hero-content pr-8">
           <div className="flex">
             <div className="mt-2 flex-auto max-w-lg flex-col">
@@ -28,10 +31,13 @@ export default function Home() {
               </Link>
             </div>
             <div
-              className="flex-auto w rounded-xl  border border-neutral bg-base-300"
+              className={`flex-auto w rounded-xl border bg-base-100`}
               style={{
-                backgroundImage:
-                  "radial-gradient(circle at 2px 2px, hsl(var(--nf)) 1px, transparent 0)",
+                borderColor:
+                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
+                backgroundImage: `radial-gradient(circle at 2px 2px, ${
+                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
+                } 1px, transparent 0)`,
                 backgroundSize: "12px 12px",
               }}
             >
