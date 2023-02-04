@@ -6,17 +6,14 @@ import { createSampleStyckerCardDataArray } from "../../.testing/createSampleSty
 import Select from "react-tailwindcss-select";
 import { useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
+import { sortByValues } from "@/config/enums/sortByValues";
 
 const filterValues = [
   { value: "fox", label: "🦊 Fox" },
   { value: "Butterfly", label: "🦋 Butterfly" },
   { value: "Honeybee", label: "🐝 Honeybee" },
 ];
-const sortByValues = [
-  { value: "created", label: "Date Created" },
-  { value: "views", label: "Views" },
-  { value: "placeholder", label: "Placeholder" },
-];
+
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
