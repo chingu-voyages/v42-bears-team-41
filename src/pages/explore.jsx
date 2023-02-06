@@ -2,7 +2,7 @@ import Center from "@/components/Center";
 import { DividerArea } from "@/components/DividerArea";
 import { StyckerCardWithFixedAdjustableHeight } from "@/components/StyckerCard";
 import Select from "react-tailwindcss-select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
 import { sortByValues } from "@/config/enums/sortByValues";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
@@ -13,7 +13,6 @@ const filterValues = [
   { value: "Butterfly", label: "🦋 Butterfly" },
   { value: "Honeybee", label: "🐝 Honeybee" },
 ];
-
 const itemsPerLoad = 50;
 
 // DO NOT PUSH TO PROD
