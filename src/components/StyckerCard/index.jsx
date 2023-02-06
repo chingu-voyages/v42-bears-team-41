@@ -21,27 +21,30 @@ export function StyckerCard({ title, description, user, tags, image }) {
               <div class="flex flex-col w-16">
                 <div className="avatar flex justify-center">
                   <div className="w-12 rounded">
-                    {user.avatar_url ? (
+                    {user?.avatar_url ? (
                       <img
-                        src={user.avatar_url}
+                        src={user?.avatar_url}
                         alt={`${user.name}'s avatar`}
                       />
                     ) : (
                       <div className="avatar placeholder">
                         <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
                           <span className="text-2xl">
-                            {`${user.name}`.charAt(0).toUpperCase()}
+                            {user?.name
+                              ? `${user?.name}`.charAt(0).toUpperCase()
+                              : "U"}
                           </span>
                         </div>
                       </div>
                     )}
                   </div>
                 </div>
+
                 <h4
                   className="mt-2 text-center text-sm font-semibold"
                   style={{ hyphens: "auto", wordBreak: "break-word" }}
                 >
-                  {user.name}
+                  {user?.name || "Unknown"}
                 </h4>
               </div>
             </div>

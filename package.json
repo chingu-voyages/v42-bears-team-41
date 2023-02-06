@@ -20,6 +20,8 @@
     "react-aspect-ratio": "^1.1.4",
     "react-cool-dimensions": "^3.0.0",
     "react-dom": "18.2.0",
+    "react-masonry-css": "^1.0.16",
+    "react-responsive-masonry": "^2.1.7",
     "react-sizeme": "^3.0.2",
     "react-stack-grid": "^0.7.1",
     "react-tailwindcss-select": "^1.6.0"

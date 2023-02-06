@@ -3,7 +3,9 @@ import { sortByValues } from "@/config/enums/sortByValues";
 
 export default async function handler(req, res) {
   const spCollection = await MongoSideProjectCollection();
-  const { sortType, skip = 0, number = 100 /* q = "" */ } = req.query;
+  let { sortType, skip = 0, number = 100 /* q = "" */ } = req.query;
+  skip = parseInt(skip);
+  number = parseInt(number);
 
   if (!sortByValues.some((sortByValue) => sortByValue.value === sortType))
     res.status(400).send("Invalid sortType");

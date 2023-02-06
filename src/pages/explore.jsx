@@ -2,7 +2,6 @@ import Center from "@/components/Center";
 import { DividerArea } from "@/components/DividerArea";
 import { StyckerCardWithFixedAdjustableHeight } from "@/components/StyckerCard";
 import StackGrid from "react-stack-grid";
-import { createSampleStyckerCardDataArray } from "../../.testing/createSampleStyckerCardData";
 import Select from "react-tailwindcss-select";
 import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
@@ -14,14 +13,34 @@ const filterValues = [
   { value: "Honeybee", label: "🐝 Honeybee" },
 ];
 
-const itemsPerLoad = 100;
+const itemsPerLoad = 50;
 
 // DO NOT PUSH TO PROD
+/*
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(
   itemsPerLoad,
   1,
   3
-);
+); 
+*/
+
+const fetchGetStyckers = async (skip, sortType) => {
+  try {
+    // alert(`skip${skip} & number ${itemsPerLoad} & sortType = ${sortType}`);
+    const res = await fetch(
+      `/api/getStyckers?skip=${skip}&number=${itemsPerLoad}&sortType=${sortType}`
+    );
+    const data = await res.json();
+    // alert(JSON.stringify(data));a
+    // alert("incoming data");
+    // alert(JSON.stringify(data));
+    return data;
+  } catch (err) {
+    // alert(JSON.stringify(err));
+    console.log(err);
+    throw err;
+  }
+};
 
 export default function ExplorePage() {
   const [filters, setFilters] = useState(null);
@@ -30,13 +49,28 @@ export default function ExplorePage() {
     setFilters(value);
   };
 
-  const [sortByValue, setSortByValue] = useState(null);
+  const [sortByValue, setSortByValue] = useState({
+    value: "created_a",
+    label: "Date Created (Ascending)",
+  });
 
   const handleSortByValueChange = (value) => {
     setSortByValue(value);
   };
 
-  const [styckerData, setStyckerData] = useState(sampleStyckerCardDataArray);
+  const [styckerData, setStyckerData] = useState([]);
+
+  // Preload data
+  useEffect(() => {
+    async function preloadData() {
+      try {
+        const res = await fetchGetStyckers(0, sortByValue.value);
+        // alert(JSON.stringify(res));
+        setStyckerData(res.data);
+      } catch {}
+    }
+    preloadData();
+  }, [sortByValue]);
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const handleScroll = () => {
@@ -59,15 +93,44 @@ export default function ExplorePage() {
 
   const [currentLoadedItems, setCurrentLoadedItems] = useState(itemsPerLoad);
 
+  const [hasReachedEnd, setHasReachedEnd] = useState(false);
+
   useEffect(() => {
-    if (scrollPosition >= 0.75) {
-      // use currentLoadedItems in api req
-      setCurrentLoadedItems(currentLoadedItems + itemsPerLoad);
+    async function loadNewData() {
+      try {
+        if (scrollPosition >= 0.75 && !hasReachedEnd) {
+          // alert("pls");
+          // const newItems = createSampleStyckerCardDataArray(itemsPerLoad, 1, 3);
+          const data = await fetchGetStyckers(
+            currentLoadedItems,
+            sortByValue.value
+          );
 
-      const newItems = createSampleStyckerCardDataArray(itemsPerLoad, 1, 3);
+          // alert("incoming new items");
+          // alert(JSON.stringify(data));
+          // alert(JSON.stringify(data.data));
+          const newItems = data.data;
 
-      setStyckerData(styckerData.concat(newItems));
-    } // alert("close to bottom");
+          if (newItems && newItems?.length && newItems.length === 0) {
+            setHasReachedEnd(true);
+            return;
+          }
+          if (!data || !newItems) return;
+
+          // alert(JSON.stringify(newItems));
+          setStyckerData(styckerData.concat(newItems));
+
+          // use currentLoadedItems in api req
+          setCurrentLoadedItems(currentLoadedItems + itemsPerLoad);
+        } // alert("close to bottom");
+      } catch (err) {
+        // alert("Error loading more data: " + JSON.stringify(err));
+        // alert(err);
+        console.log(err);
+      }
+    }
+    loadNewData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollPosition]);
 
   return (
@@ -128,26 +191,47 @@ export default function ExplorePage() {
           </div>
         </Center>
       </DividerArea>
+
       <Center className="mt-12">
         <div className="w-10/12">
           <StackGrid columnWidth={"30%"} gutterHeight={25}>
             {styckerData.map((cardData) => {
               return (
-                <div key={cardData.id}>
+                <div key={cardData?.id}>
                   <StyckerCardWithFixedAdjustableHeight
-                    image={cardData.image}
+                    image={cardData?.image}
                     user={{
-                      name: cardData.user.name,
-                      avatar_url: cardData.user.avatar_url,
+                      name: cardData?.user?.name,
+                      avatar_url: cardData?.user?.avatar_url,
                     }}
-                    title={cardData.title}
-                    description={cardData.description}
-                    tags={cardData.tags}
+                    title={cardData?.title}
+                    description={cardData?.description}
+                    tags={cardData?.tags}
                   />
                 </div>
               );
             })}
           </StackGrid>
+          <Center className="mt-20">
+            <div className="alert alert-success shadow-lg w-64 drop-shadow-xl ">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current flex-shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span className="text-center">No more Styckers to show</span>
+              </div>
+            </div>
+          </Center>
           <div className="mt-10"></div>
         </div>
       </Center>
