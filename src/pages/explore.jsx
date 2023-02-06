@@ -6,6 +6,7 @@ import Select from "react-tailwindcss-select";
 import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
 import { sortByValues } from "@/config/enums/sortByValues";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 const filterValues = [
   { value: "fox", label: "🦊 Fox" },
@@ -194,24 +195,29 @@ export default function ExplorePage() {
 
       <Center className="mt-12">
         <div className="w-10/12">
-          <StackGrid columnWidth={"30%"} gutterHeight={25}>
-            {styckerData.map((cardData) => {
-              return (
-                <div key={cardData?.id}>
-                  <StyckerCardWithFixedAdjustableHeight
-                    image={cardData?.image}
-                    user={{
-                      name: cardData?.user?.name,
-                      avatar_url: cardData?.user?.avatar_url,
-                    }}
-                    title={cardData?.title}
-                    description={cardData?.description}
-                    tags={cardData?.tags}
-                  />
-                </div>
-              );
-            })}
-          </StackGrid>
+          <ResponsiveMasonry
+            columnsCountBreakPoints={{ 600: 1, 950: 2, 1475: 3 }}
+            className="flex justify-center"
+          >
+            <Masonry gutter="1.5rem" className="flex justify-center">
+              {styckerData.map((cardData) => {
+                return (
+                  <div key={cardData?.id} className="flex justify-center">
+                    <StyckerCardWithFixedAdjustableHeight
+                      image={cardData?.image}
+                      user={{
+                        name: cardData?.user?.name,
+                        avatar_url: cardData?.user?.avatar_url,
+                      }}
+                      title={cardData?.title}
+                      description={cardData?.description}
+                      tags={cardData?.tags}
+                    />
+                  </div>
+                );
+              })}
+            </Masonry>
+          </ResponsiveMasonry>
           <Center className="mt-20">
             <div className="alert alert-success shadow-lg w-64 drop-shadow-xl ">
               <div>
