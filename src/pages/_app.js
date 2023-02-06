@@ -7,7 +7,9 @@ export default function App({ Component, pageProps }) {
   let dark = false;
   if (typeof window !== "undefined") {
     // Client-side-only code
-    dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    dark =
+      localStorage.getItem("mode") ||
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
 
   return (

@@ -13,6 +13,7 @@ export const ThemeProvider = ({ defaultTheme, children }) => {
 
   const toggleTheme = () => {
     setTheme(mode === "dark" ? LightTheme : DarkTheme);
+    localStorage.setItem("mode", mode);
   };
 
   return (

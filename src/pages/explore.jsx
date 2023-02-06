@@ -4,7 +4,7 @@ import { StyckerCardWithFixedAdjustableHeight } from "@/components/StyckerCard";
 import StackGrid from "react-stack-grid";
 import { createSampleStyckerCardDataArray } from "../../.testing/createSampleStyckerCardData";
 import Select from "react-tailwindcss-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
 import { sortByValues } from "@/config/enums/sortByValues";
 
@@ -14,9 +14,14 @@ const filterValues = [
   { value: "Honeybee", label: "🐝 Honeybee" },
 ];
 
+const itemsPerLoad = 100;
 
 // DO NOT PUSH TO PROD
-const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
+const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(
+  itemsPerLoad,
+  1,
+  3
+);
 
 export default function ExplorePage() {
   const [filters, setFilters] = useState(null);
@@ -31,7 +36,39 @@ export default function ExplorePage() {
     setSortByValue(value);
   };
 
-  const [styckerData] = useState(sampleStyckerCardDataArray);
+  const [styckerData, setStyckerData] = useState(sampleStyckerCardDataArray);
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const handleScroll = () => {
+    const position =
+      Math.round(
+        (window.scrollY / (document.body.scrollHeight - window.innerHeight) +
+          Number.EPSILON) *
+          1000
+      ) / 1000; // window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const [currentLoadedItems, setCurrentLoadedItems] = useState(itemsPerLoad);
+
+  useEffect(() => {
+    if (scrollPosition >= 0.75) {
+      // use currentLoadedItems in api req
+      setCurrentLoadedItems(currentLoadedItems + itemsPerLoad);
+
+      const newItems = createSampleStyckerCardDataArray(itemsPerLoad, 1, 3);
+
+      setStyckerData(styckerData.concat(newItems));
+    } // alert("close to bottom");
+  }, [scrollPosition]);
 
   return (
     <>
