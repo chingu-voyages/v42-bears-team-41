@@ -1,7 +1,6 @@
 import Center from "@/components/Center";
 import { DividerArea } from "@/components/DividerArea";
 import { StyckerCardWithFixedAdjustableHeight } from "@/components/StyckerCard";
-import StackGrid from "react-stack-grid";
 import Select from "react-tailwindcss-select";
 import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
