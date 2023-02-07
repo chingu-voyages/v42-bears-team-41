@@ -41,15 +41,15 @@ export default function ExpandedPage() {
             <h1 className="text-5xl font-bold left-0 mt-3">A Project</h1>
 
             <div className="absolute right-0 space-x-4 ">
-              <button className="btn btn-outline sm:btn-xs md:btn-sm  lg:btn my-4">
+              <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4">
                 Donate
                 <IconBrandCashapp size={20} />
               </button>
-              <button className="btn btn-outline sm:btn-xs md:btn-sm  lg:btn  my-4 ">
+              <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn  my-4 ">
                 Buy Me a Coffee
                 <IconCup />
               </button>
-              <button className="btn btn-outline gap-2 sm:btn-xs md:btn-sm  lg:btn  my-4 ">
+              <button className="btn btn-outline hover:text-neutral-content gap-2 sm:btn-xs md:btn-sm  lg:btn  my-4 ">
                 Contribute
                 <IconBrandGithub size={20} />
               </button>
@@ -70,10 +70,19 @@ export default function ExpandedPage() {
             </ul>
           </div>
         </div>
-
+        <div style={{ display: "none" }} className="border-neutral-focus">
+          These invisible elements allow the dynamic classes to compile
+        </div>
+        <div style={{ display: "none" }} className="border-base-300">
+          These invisible elements allow the dynamic classes to compile
+        </div>
         <div className="divider divider-horizontal h-full min-h-screen"></div>
         <div className="mt-6 grid h-20 flex-grow card  rounded-box place-items-center">
-          <div className="card w-96 glass">
+          <div
+            className={`card w-96 border border-${
+              mode === "dark" ? "neutral-focus" : "base-300"
+            }`}
+          >
             <figure>
               <img
                 src="https://img.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
@@ -90,11 +99,16 @@ export default function ExpandedPage() {
               </p>
             </div>
           </div>
+          <div className="divider">
+            <span>
+              More by <span className="italic">Owner Name</span>
+            </span>
+          </div>
           <div>
             <div className="w-10/12 mt-2 ">
               {styckerData.map((cardData) => {
                 return (
-                  <div key={cardData.id}>
+                  <div key={cardData.id} className="mt-4">
                     <StyckerCard
                       image={cardData.image}
                       user={{
