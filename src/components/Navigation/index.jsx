@@ -1,9 +1,13 @@
+/* eslint-disable camelcase */
 import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { isLoggedIn } from "@/backend/auth/isLoggedIn";
+import { NavPages } from "@/config/defaults.config";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Center from "../Center";
+import { useTheme } from "../Theme/state";
 import { ProfileThemeToggle } from "./profileToggler";
 
 export default function Navigation() {
@@ -13,14 +17,30 @@ export default function Navigation() {
   const supabase = useSupabaseClient();
   const supabaseUser = useUser();
 
+  const cropped_name = `${user.full_name}`.split(" ")[0];
+
   useEffect(() => {
     if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabaseUser]);
 
+  const { mode } = useTheme();
+
   return (
     <header>
-      <div className="bg-base-100 navbar relative">
+      <div className="border-b-neutral-focus" style={{ display: "none" }}>
+        {" "}
+        These invisible elements allow the dynamic classes to compile
+      </div>
+      <div className="border-b-base-300" style={{ display: "none" }}>
+        {" "}
+        These invisible elements allow the dynamic classes to compile{" "}
+      </div>
+      <div
+        className={`bg-base-100 navbar relative border-b border-b-${
+          mode === "dark" ? "neutral-focus" : "base-300"
+        } border-dashed`}
+      >
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -73,38 +93,85 @@ export default function Navigation() {
               </li>
             </ul>
           </div>
-          <a className="ml-10 btn btn-ghost normal-case text-xl">daisyUI</a>
+          <Link
+            href="/"
+            className="ml-10 px-2 btn btn-ghost normal-case text-xl"
+          >
+            <div className="relative">
+              <div className="w-40 relative h-10">
+                <Image
+                  src={
+                    mode === "dark" ? "/stycker_dark.svg" : "/stycker_light.svg"
+                  }
+                  alt="Stycker Logo"
+                  fill
+                />
+              </div>
+              <Image
+                src="/stycker_dark.svg"
+                alt="Stycker Logo"
+                fill
+                style={{ display: "none" }}
+              />
+              <Image
+                src="/stycker_light.svg"
+                alt="Stycker Logo"
+                fill
+                style={{ display: "none" }}
+              />
+            </div>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li tabIndex={0}>
-              <a>
-                Parent
-                <svg
-                  className="fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                </svg>
-              </a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
+            {NavPages.map((item) => {
+              return item.children?.length && item.children.length > 0 ? (
+                <li tabIndex={0} key={item.href}>
+                  <Link href={item.href}>
+                    {item.name}
+                    <svg
+                      className="fill-current"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+                    </svg>
+                  </Link>
+                  <ul
+                    className="border-b-neutral-focus"
+                    style={{ display: "none" }}
+                  >
+                    {" "}
+                    These invisible elements allow the dynamic classes to
+                    compile
+                  </ul>
+                  <ul className="border-b-base-300" style={{ display: "none" }}>
+                    {" "}
+                    These invisible elements allow the dynamic classes to
+                    compile{" "}
+                  </ul>
+                  <ul
+                    className={`p-2 dropdown-content menu shadow bg-base-100 rounded-box z-10 border border-${
+                      mode === "dark" ? "neutral-focus" : "base-300"
+                    }`}
+                  >
+                    {item.children.map((item) => {
+                      return (
+                        <li key={item.href}>
+                          <Link href={item.href}>{item.name}</Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </li>
-                <li>
-                  <a>Submenu 2</a>
+              ) : (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.name}</Link>
                 </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+              );
+            })}
           </ul>
         </div>
         <div className="navbar-end">
@@ -131,11 +198,11 @@ export default function Navigation() {
                   <img src={user?.avatar_url} alt={`${user.name}'s avatar`} />
                 ) : (
                   <div className="avatar placeholder">
-                    <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
+                    <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
                       <span className="text-2xl">
                         {user?.name
                           ? `${user?.name}`.charAt(0).toUpperCase()
-                          : "U"}
+                          : "S"}
                       </span>
                     </div>
                   </div>
@@ -144,20 +211,41 @@ export default function Navigation() {
             </label>
             <ul
               tabIndex={0}
-              className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              className={`mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 border border-${
+                mode === "dark" ? "neutral-focus" : "base-300"
+              }`}
             >
+              <Center className={"text-sm py-1"}>
+                {cropped_name === "undefined" ? (
+                  <div>
+                    Welcome,
+                    <span className="font-bold ml-1">Stranger</span>
+                  </div>
+                ) : (
+                  <div>
+                    Hello,
+                    <span className="font-bold ml-1">{cropped_name}</span>
+                  </div>
+                )}
+              </Center>
               <ProfileThemeToggle />
+              {loggedIn && (
+                <div>
+                  <li>
+                    <a className="justify-between">
+                      Profile
+                      <span className="badge badge-secondary badge-outline">
+                        New
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a>Settings</a>
+                  </li>
+                </div>
+              )}
               <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li>
-                <Link href={loggedIn ? "/signup" : "/login"}>
+                <Link href={loggedIn ? "/logout" : "/login"}>
                   {loggedIn ? "Logout" : "Login"}
                 </Link>
               </li>
