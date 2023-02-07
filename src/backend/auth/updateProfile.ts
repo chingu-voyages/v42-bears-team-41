@@ -6,7 +6,7 @@ export async function updateProfile(user: User, supabase: SupabaseClient) {
     const updates: User = user;
     updates.updated_at = new Date().toISOString();
 
-    let { error } = await supabase.from("profiles").upsert(updates);
+    const { error } = await supabase.from("profiles").upsert(updates);
     if (error) throw error;
     alert("Profile updated!");
   } catch (error) {
