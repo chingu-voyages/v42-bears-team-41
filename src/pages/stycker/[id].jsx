@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IconCup } from "@tabler/icons-react";
 import { IconBrandCashapp } from "@tabler/icons-react";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { createSampleStyckerCardDataArray } from "../../.testing/createSampleStyckerCardData";
+import { createSampleStyckerCardDataArray } from "../../../.testing/createSampleStyckerCardData";
 import { StyckerCard } from "@/components/StyckerCard";
 
 // DO NOT PUSH TO PROD
