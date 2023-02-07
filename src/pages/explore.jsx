@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
 import { sortByValues } from "@/config/enums/sortByValues";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { LinkWrapper } from "@/components/LinkWrapper";
 
 const filterValues = [
   { value: "fox", label: "🦊 Fox" },
@@ -201,7 +202,11 @@ export default function ExplorePage() {
             <Masonry gutter="1.5rem" className="flex justify-center">
               {styckerData.map((cardData) => {
                 return (
-                  <div key={cardData?.id} className="flex justify-center">
+                  <LinkWrapper
+                    href={cardData?.href || "#"}
+                    key={cardData?.id}
+                    className="flex justify-center"
+                  >
                     <StyckerCardWithFixedAdjustableHeight
                       image={cardData?.image}
                       user={{
@@ -212,7 +217,7 @@ export default function ExplorePage() {
                       description={cardData?.description}
                       tags={cardData?.tags}
                     />
-                  </div>
+                  </LinkWrapper>
                 );
               })}
             </Masonry>

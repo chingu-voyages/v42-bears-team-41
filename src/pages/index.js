@@ -1,7 +1,24 @@
+import { LinkWrapper } from "@/components/LinkWrapper";
 import { StyckerCard } from "@/components/StyckerCard";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [doubleSampleStyckerData, setDoubleSampleStyckerData] = useState([]);
+
+  useEffect(() => {
+    async function getDoubleSampleStyckerData() {
+      try {
+        const res = await fetch(`/api/getRandomStyckers?number=2`);
+        const data = await res.json();
+        setDoubleSampleStyckerData(data.data);
+      } catch (err) {
+        alert(JSON.stringify(err.message));
+      }
+    }
+    getDoubleSampleStyckerData();
+  }, []);
+
   return (
     <>
       <div className="hero min-h-screen bg-base-200">
@@ -35,17 +52,21 @@ export default function Home() {
               }}
             >
               <div className="px-4 py-4 ">
-                <StyckerCard
-                  title="Sample Title"
-                  user={{ name: "wow" }}
-                  description="a"
-                />
+                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                  <StyckerCard
+                    title={doubleSampleStyckerData[0]?.title}
+                    user={doubleSampleStyckerData[0]?.user}
+                    description={doubleSampleStyckerData[0]?.description}
+                  />
+                </LinkWrapper>
                 <div className="mt-8" />
-                <StyckerCard
-                  title="Sample Title"
-                  user={{ name: "wow" }}
-                  description="a"
-                />
+                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                  <StyckerCard
+                    title={doubleSampleStyckerData[1]?.title}
+                    user={doubleSampleStyckerData[1]?.user}
+                    description={doubleSampleStyckerData[1]?.description}
+                  />
+                </LinkWrapper>
               </div>
             </div>
           </div>
