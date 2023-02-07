@@ -7,7 +7,7 @@ export async function easyLoadUser(
   supabaseUser: User,
   callback: Function
 ) {
-  const u = await TryGetUser(supabase);
+  const u = await TryGetUser(supabase, supabaseUser.id);
   const uu = CombineUsers(u, supabaseUser);
   // check if user actually rxists
   if (u && uu.aud === "authenticated" && uu.id) callback(uu);
