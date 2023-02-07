@@ -6,27 +6,41 @@ import {
 } from "@tabler/icons-react";
 import { createSampleStyckerCardDataArray } from "../../../.testing/createSampleStyckerCardData";
 import { StyckerCard } from "@/components/StyckerCard";
+import { useTheme } from "@/components/Theme/state";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
 
 export default function ExpandedPage() {
   const [styckerData] = useState(sampleStyckerCardDataArray);
+  const { mode } = useTheme();
 
   return (
-    <>
-      <div className="flex w-full mt-10 ">
-        <div className="grid h-20 flex-grow card rounded-box place-items-center ">
-          <div className=" min-h-screen ">
+    <div className="bg-base-100">
+      <div className="flex mx-20">
+        <div className="grid h-20 flex-grow card rounded-box ">
+          <div
+            className={`mt-6 py-4 flex-auto w rounded-xl border bg-base-100`}
+            style={{
+              borderColor:
+                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
+              backgroundImage: `radial-gradient(circle at 2px 2px, ${
+                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
+              } 1px, transparent 0)`,
+              backgroundSize: "12px 12px",
+            }}
+          >
             <div className=" justify-center my-2 flex space-x-8">
               <img
                 src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
                 className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
               />
             </div>
-            <div className="space-x-4 flex flex-wrap ml-2">
-              <h1 className="text-5xl font-bold ml-2">A Project</h1>
+          </div>
+          <div className=" flex flex-wrap relative mt-2">
+            <h1 className="text-5xl font-bold left-0 mt-3">A Project</h1>
 
+            <div className="absolute right-0 space-x-4 ">
               <button className="btn btn-outline sm:btn-xs md:btn-sm  lg:btn my-4">
                 Donate
                 <IconBrandCashapp size={20} />
@@ -40,25 +54,25 @@ export default function ExpandedPage() {
                 <IconBrandGithub size={20} />
               </button>
             </div>
-            <p className="py-6 ml-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Maecenas accumsan lacus vel facilisis volutpat est velit egestas
-              dui. At elementum eu facilisis sed odio. At volutpat diam ut
-              venenatis tellus in metus vulputate. .
-            </p>
-            <div className="ml-2">
-              <ul>
-                <li>Project Links</li>
-                <li>GitHub</li>
-                <li>Buy Me a Coffee</li>
-              </ul>
-            </div>
+          </div>
+          <p className="py-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Maecenas
+            accumsan lacus vel facilisis volutpat est velit egestas dui. At
+            elementum eu facilisis sed odio. At volutpat diam ut venenatis
+            tellus in metus vulputate. .
+          </p>
+          <div>
+            <ul>
+              <li>Project Links</li>
+              <li>GitHub</li>
+              <li>Buy Me a Coffee</li>
+            </ul>
           </div>
         </div>
 
-        <div className="divider divider-horizontal">|</div>
-        <div className="grid h-20 flex-grow card  rounded-box place-items-center">
+        <div className="divider divider-horizontal h-full min-h-screen"></div>
+        <div className="mt-6 grid h-20 flex-grow card  rounded-box place-items-center">
           <div className="card w-96 glass">
             <figure>
               <img
@@ -98,6 +112,6 @@ export default function ExpandedPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
