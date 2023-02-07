@@ -1,25 +1,46 @@
 import Center from "@/components/Center";
 import { DividerArea } from "@/components/DividerArea";
 import { StyckerCardWithFixedAdjustableHeight } from "@/components/StyckerCard";
-import StackGrid from "react-stack-grid";
-import { createSampleStyckerCardDataArray } from "../../.testing/createSampleStyckerCardData";
 import Select from "react-tailwindcss-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectStyle from "@/styles/SelectStyle";
+import { sortByValues } from "@/config/enums/sortByValues";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { LinkWrapper } from "@/components/LinkWrapper";
 
 const filterValues = [
   { value: "fox", label: "🦊 Fox" },
   { value: "Butterfly", label: "🦋 Butterfly" },
   { value: "Honeybee", label: "🐝 Honeybee" },
 ];
-const sortByValues = [
-  { value: "created", label: "Date Created" },
-  { value: "views", label: "Views" },
-  { value: "placeholder", label: "Placeholder" },
-];
+const itemsPerLoad = 50;
 
 // DO NOT PUSH TO PROD
-const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
+/*
+const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(
+  itemsPerLoad,
+  1,
+  3
+); 
+*/
+
+const fetchGetStyckers = async (skip, sortType) => {
+  try {
+    // alert(`skip${skip} & number ${itemsPerLoad} & sortType = ${sortType}`);
+    const res = await fetch(
+      `/api/getStyckers?skip=${skip}&number=${itemsPerLoad}&sortType=${sortType}`
+    );
+    const data = await res.json();
+    // alert(JSON.stringify(data));a
+    // alert("incoming data");
+    // alert(JSON.stringify(data));
+    return data;
+  } catch (err) {
+    // alert(JSON.stringify(err));
+    console.log(err);
+    throw err;
+  }
+};
 
 export default function ExplorePage() {
   const [filters, setFilters] = useState(null);
@@ -28,13 +49,89 @@ export default function ExplorePage() {
     setFilters(value);
   };
 
-  const [sortByValue, setSortByValue] = useState(null);
+  const [sortByValue, setSortByValue] = useState({
+    value: "created_a",
+    label: "Date Created (Ascending)",
+  });
 
   const handleSortByValueChange = (value) => {
     setSortByValue(value);
   };
 
-  const [styckerData] = useState(sampleStyckerCardDataArray);
+  const [styckerData, setStyckerData] = useState([]);
+
+  // Preload data
+  useEffect(() => {
+    async function preloadData() {
+      try {
+        const res = await fetchGetStyckers(0, sortByValue.value);
+        // alert(JSON.stringify(res));
+        setStyckerData(res.data);
+      } catch {}
+    }
+    preloadData();
+  }, [sortByValue]);
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const handleScroll = () => {
+    const position =
+      Math.round(
+        (window.scrollY / (document.body.scrollHeight - window.innerHeight) +
+          Number.EPSILON) *
+          1000
+      ) / 1000; // window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const [currentLoadedItems, setCurrentLoadedItems] = useState(itemsPerLoad);
+
+  const [hasReachedEnd, setHasReachedEnd] = useState(false);
+
+  useEffect(() => {
+    async function loadNewData() {
+      try {
+        if (scrollPosition >= 0.75 && !hasReachedEnd) {
+          // alert("pls");
+          // const newItems = createSampleStyckerCardDataArray(itemsPerLoad, 1, 3);
+          const data = await fetchGetStyckers(
+            currentLoadedItems,
+            sortByValue.value
+          );
+
+          // alert("incoming new items");
+          // alert(JSON.stringify(data));
+          // alert(JSON.stringify(data.data));
+          const newItems = data.data;
+
+          if (newItems && newItems?.length && newItems.length === 0) {
+            setHasReachedEnd(true);
+            return;
+          }
+          if (!data || !newItems) return;
+
+          // alert(JSON.stringify(newItems));
+          setStyckerData(styckerData.concat(newItems));
+
+          // use currentLoadedItems in api req
+          setCurrentLoadedItems(currentLoadedItems + itemsPerLoad);
+        } // alert("close to bottom");
+      } catch (err) {
+        // alert("Error loading more data: " + JSON.stringify(err));
+        // alert(err);
+        console.log(err);
+      }
+    }
+    loadNewData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollPosition]);
 
   return (
     <>
@@ -95,26 +192,56 @@ export default function ExplorePage() {
           </div>
         </Center>
       </DividerArea>
+
       <Center className="mt-12">
         <div className="w-10/12">
-          <StackGrid columnWidth={"30%"} gutterHeight={25}>
-            {styckerData.map((cardData) => {
-              return (
-                <div key={cardData.id}>
-                  <StyckerCardWithFixedAdjustableHeight
-                    image={cardData.image}
-                    user={{
-                      name: cardData.user.name,
-                      avatar_url: cardData.user.avatar_url,
-                    }}
-                    title={cardData.title}
-                    description={cardData.description}
-                    tags={cardData.tags}
+          <ResponsiveMasonry
+            columnsCountBreakPoints={{ 600: 1, 950: 2, 1475: 3 }}
+            className="flex justify-center"
+          >
+            <Masonry gutter="1.5rem" className="flex justify-center">
+              {styckerData.map((cardData) => {
+                return (
+                  <LinkWrapper
+                    href={cardData?.href || "#"}
+                    key={cardData?.id}
+                    className="flex justify-center"
+                  >
+                    <StyckerCardWithFixedAdjustableHeight
+                      image={cardData?.image}
+                      user={{
+                        name: cardData?.user?.name,
+                        avatar_url: cardData?.user?.avatar_url,
+                      }}
+                      title={cardData?.title}
+                      description={cardData?.description}
+                      tags={cardData?.tags}
+                    />
+                  </LinkWrapper>
+                );
+              })}
+            </Masonry>
+          </ResponsiveMasonry>
+          <Center className="mt-20">
+            <div className="alert alert-success shadow-lg w-64 drop-shadow-xl ">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current flex-shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
-                </div>
-              );
-            })}
-          </StackGrid>
+                </svg>
+                <span className="text-center">No more Styckers to show</span>
+              </div>
+            </div>
+          </Center>
           <div className="mt-10"></div>
         </div>
       </Center>
