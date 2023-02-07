@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="hero min-h-screen bg-base-100">
+      <div className="hero min-h-screen bg-base-100 -mt-16">
         <div className="hero-content pr-8">
           <div className="flex">
             <div className="mt-2 flex-auto max-w-lg flex-col">
