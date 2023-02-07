@@ -14,15 +14,15 @@ export function ThemeToggle({ size = 20, ...props }) {
   return (
     <div {...props}>
       <button
-        className="border-2 border-accent rounded-full p-1"
+        className="border-2 border-accent rounded-full p-1 focus:border-accent-focus focus:text-accent-focus text-accent "
         onClick={() => {
           toggleTheme();
         }}
       >
         {wrappedMode === "dark" ? (
-          <IconSun className="text-accent" size={size} />
+          <IconSun size={size} />
         ) : (
-          <IconMoonStars className="text-accent" size={size} />
+          <IconMoonStars size={size} />
         )}
       </button>
     </div>
