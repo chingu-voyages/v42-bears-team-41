@@ -3,10 +3,12 @@ import {
   IconBrandCashapp,
   IconBrandGithub,
   IconCup,
+  IconLink,
 } from "@tabler/icons-react";
 import { createSampleStyckerCardDataArray } from "../../../.testing/createSampleStyckerCardData";
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
+import Link from "next/link";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
@@ -43,15 +45,15 @@ export default function ExpandedPage() {
             <div className="absolute right-0 space-x-4 ">
               <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4">
                 Donate
-                <IconBrandCashapp size={20} />
+                <IconBrandCashapp size={"1.5em"} className="mb-0.5 ml-1.5" />
               </button>
               <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn  my-4 ">
                 Buy Me a Coffee
-                <IconCup />
+                <IconCup size={"1.5em"} className="mb-0.5 ml-1.5" />
               </button>
               <button className="btn btn-outline hover:text-neutral-content gap-2 sm:btn-xs md:btn-sm  lg:btn  my-4 ">
                 Contribute
-                <IconBrandGithub size={20} />
+                <IconBrandGithub size={"1.5em"} className="mb-0.5 ml-1.5" />
               </button>
             </div>
           </div>
@@ -106,7 +108,7 @@ export default function ExpandedPage() {
           </div>
           <div>
             <div className="w-10/12 mt-2 ">
-              {styckerData.map((cardData) => {
+              {styckerData.slice(0, 5).map((cardData) => {
                 return (
                   <div key={cardData.id} className="mt-4">
                     <StyckerCard
@@ -122,6 +124,17 @@ export default function ExpandedPage() {
                   </div>
                 );
               })}
+              <Link href="#">
+                <div className="link text-center my-6">
+                  <span className="relative">
+                    See more{"ㅤ"}
+                    <IconLink
+                      size={"1em"}
+                      className="inline-flex self-center absolute mt-1 left-[4.3rem]"
+                    />
+                  </span>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
