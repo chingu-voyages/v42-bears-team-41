@@ -4,7 +4,7 @@ import { GetUserOrThrow } from "@/backend/auth/getUser";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 
-export default function profileExamplePage() {
+export default function ProfileExamplePage() {
   const [user, setUser] = useState({});
 
   const supabase = useSupabaseClient();
