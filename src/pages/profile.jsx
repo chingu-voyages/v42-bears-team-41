@@ -1,6 +1,4 @@
-import CombineUsers from "@/backend/auth/combineUsers";
 import { easyLoadUser } from "@/backend/auth/easyGetUser";
-import { GetUserOrThrow } from "@/backend/auth/getUser";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 
