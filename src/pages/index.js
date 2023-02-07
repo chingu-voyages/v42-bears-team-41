@@ -1,10 +1,30 @@
+import { LinkWrapper } from "@/components/LinkWrapper";
 import { StyckerCard } from "@/components/StyckerCard";
+import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [doubleSampleStyckerData, setDoubleSampleStyckerData] = useState([]);
+
+  useEffect(() => {
+    async function getDoubleSampleStyckerData() {
+      try {
+        const res = await fetch(`/api/getRandomStyckers?number=2`);
+        const data = await res.json();
+        setDoubleSampleStyckerData(data.data);
+      } catch (err) {
+        alert(JSON.stringify(err.message));
+      }
+    }
+    getDoubleSampleStyckerData();
+  }, []);
+
+  const { mode } = useTheme();
+
   return (
     <>
-      <div className="hero min-h-screen bg-base-200">
+      <div className="hero min-h-screen bg-base-100">
         <div className="hero-content pr-8">
           <div className="flex">
             <div className="mt-2 flex-auto max-w-lg flex-col">
@@ -27,25 +47,32 @@ export default function Home() {
               </Link>
             </div>
             <div
-              className="flex-auto w rounded-xl  border border-neutral bg-base-300"
+              className={`flex-auto w rounded-xl border bg-base-100`}
               style={{
-                backgroundImage:
-                  "radial-gradient(circle at 2px 2px, hsl(var(--nf)) 1px, transparent 0)",
+                borderColor:
+                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
+                backgroundImage: `radial-gradient(circle at 2px 2px, ${
+                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
+                } 1px, transparent 0)`,
                 backgroundSize: "12px 12px",
               }}
             >
               <div className="px-4 py-4 ">
-                <StyckerCard
-                  title="Sample Title"
-                  user={{ name: "wow" }}
-                  description="a"
-                />
+                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                  <StyckerCard
+                    title={doubleSampleStyckerData[0]?.title}
+                    user={doubleSampleStyckerData[0]?.user}
+                    description={doubleSampleStyckerData[0]?.description}
+                  />
+                </LinkWrapper>
                 <div className="mt-8" />
-                <StyckerCard
-                  title="Sample Title"
-                  user={{ name: "wow" }}
-                  description="a"
-                />
+                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                  <StyckerCard
+                    title={doubleSampleStyckerData[1]?.title}
+                    user={doubleSampleStyckerData[1]?.user}
+                    description={doubleSampleStyckerData[1]?.description}
+                  />
+                </LinkWrapper>
               </div>
             </div>
           </div>
