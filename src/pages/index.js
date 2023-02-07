@@ -48,13 +48,7 @@ export default function Home() {
             </div>
             <div
               className={`flex-auto w rounded-xl border bg-base-100`}
-              className={`flex-auto w rounded-xl border bg-base-100`}
               style={{
-                borderColor:
-                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
-                backgroundImage: `radial-gradient(circle at 2px 2px, ${
-                  mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
-                } 1px, transparent 0)`,
                 borderColor:
                   mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
                 backgroundImage: `radial-gradient(circle at 2px 2px, ${
