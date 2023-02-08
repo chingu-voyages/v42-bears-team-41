@@ -56,14 +56,21 @@ export default function ExpandedPage() {
             }}
           >
             <div className=" justify-center my-2 flex space-x-8">
-              <img
-                src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-                className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
-              />
+              {data?.image && data?.image.length > 0 ? (
+                <img
+                  src={data?.image}
+                  className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                />
+              ) : (
+                <img
+                  src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+                  className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                />
+              )}
             </div>
           </div>
           <div className=" flex flex-wrap relative mt-2">
-            <h1 className="text-5xl font-bold left-0 mt-3">A Project</h1>
+            <h1 className="text-5xl font-bold left-0 mt-3">{data.title}</h1>
 
             <div className="absolute right-0 space-x-4 ">
               {data?.contribution_links?.map((item) => {
@@ -105,13 +112,7 @@ export default function ExpandedPage() {
               </button>
             </div>
           </div>
-          <p className="py-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Maecenas
-            accumsan lacus vel facilisis volutpat est velit egestas dui. At
-            elementum eu facilisis sed odio. At volutpat diam ut venenatis
-            tellus in metus vulputate. .
-          </p>
+          <p className="py-6">{data?.description}</p>
           <div>
             <ul>
               {data?.contribution_links?.map((item) => {

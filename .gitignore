@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+.npmrc
+pnpm-lock.yaml
 
 # testing
 /coverage
