@@ -36,7 +36,7 @@ export default function ExpandedPage() {
         setData(null);
       }
     }
-    if (!id || !(id.length === 12)) setData(null);
+    if (!id || id.length < 12) setData(null);
     else preloadData();
   }, [id]);
 
@@ -196,8 +196,8 @@ export default function ExpandedPage() {
       </div>
     </div>
   ) : (
-    <div class="grid h-screen px-4 bg-base-100 place-content-center">
-      <div class="text-center">
+    <div className="grid h-screen px-4 bg-base-100 place-content-center">
+      <div className="text-center">
         <div style={{ display: "none" }} className="text-neutral-focus">
           These invisible elements allow the dynamic classes to compile
         </div>
@@ -216,11 +216,11 @@ export default function ExpandedPage() {
           Uh-oh!
         </p>
 
-        <p class="mt-4 text-base-content">We can&apos;t find that page.</p>
+        <p className="mt-4 text-base-content">We can&apos;t find that page.</p>
 
         <a
           href="#"
-          class="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
+          className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
         >
           Go Back Home
         </a>
