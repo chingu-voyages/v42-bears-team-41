@@ -216,7 +216,7 @@ export default function ExpandedPage() {
           Uh-oh!
         </p>
 
-        <p class="mt-4 text-base-content">We can't find that page.</p>
+        <p class="mt-4 text-base-content">We can&apos;t find that page.</p>
 
         <a
           href="#"
