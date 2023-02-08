@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IconBrandCashapp,
   IconBrandGithub,
@@ -9,6 +9,7 @@ import { createSampleStyckerCardDataArray } from "../../../.testing/createSample
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
@@ -16,6 +17,26 @@ const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
 export default function ExpandedPage() {
   const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
+
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [data, setData] = useState({});
+  // Preload data
+  useEffect(() => {
+    async function preloadData() {
+      if (!id) return;
+      try {
+        const res = await fetch(`/api/getStycker?id=${id}`);
+        const data = await res.json();
+        // alert(JSON.stringify(res));
+        setData(data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    preloadData();
+  }, [id]);
 
   return (
     <div className="bg-base-100">
@@ -43,6 +64,31 @@ export default function ExpandedPage() {
             <h1 className="text-5xl font-bold left-0 mt-3">A Project</h1>
 
             <div className="absolute right-0 space-x-4 ">
+              {data?.contribution_links?.map((item) => {
+                return (
+                  <button
+                    key={item.icon_url + item.url + item.display_name}
+                    className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4"
+                  >
+                    {item.icon_url === "github" ? (
+                      <IconBrandGithub
+                        size={"1.5em"}
+                        className="mb-0.5 ml-1.5"
+                      />
+                    ) : item.icon_url === "buymeacoffee" ? (
+                      <IconCup size={"1.5em"} className="mb-0.5 ml-1.5" />
+                    ) : item.icon_url === "cashlink" ? (
+                      <IconBrandCashapp
+                        size={"1.5em"}
+                        className="mb-0.5 ml-1.5"
+                      />
+                    ) : (
+                      "ic"
+                    )}
+                    {item.display_name}
+                  </button>
+                );
+              })}
               <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4">
                 Donate
                 <IconBrandCashapp size={"1.5em"} className="mb-0.5 ml-1.5" />
@@ -66,9 +112,16 @@ export default function ExpandedPage() {
           </p>
           <div>
             <ul>
-              <li>Project Links</li>
-              <li>GitHub</li>
-              <li>Buy Me a Coffee</li>
+              {data?.contribution_links?.map((item) => {
+                return (
+                  <Link
+                    href={item.url}
+                    key={item.icon_url + item.url + item.display_name}
+                  >
+                    {item.display_name}
+                  </Link>
+                );
+              })}
             </ul>
           </div>
         </div>
