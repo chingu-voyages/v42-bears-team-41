@@ -21,7 +21,7 @@ export default function ExpandedPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   // Preload data
   useEffect(() => {
     async function preloadData() {
@@ -33,9 +33,10 @@ export default function ExpandedPage() {
         setData(data.data);
       } catch (err) {
         console.log(err);
+        setData(null);
       }
     }
-    if (!(id.length === 12)) setData(null);
+    if (!id || !(id.length === 12)) setData(null);
     else preloadData();
   }, [id]);
 
@@ -195,15 +196,27 @@ export default function ExpandedPage() {
       </div>
     </div>
   ) : (
-    <div class="grid h-screen px-4 bg-white place-content-center">
+    <div class="grid h-screen px-4 bg-base-100 place-content-center">
       <div class="text-center">
-        <h1 class="font-black text-gray-200 text-9xl">404</h1>
+        <div style={{ display: "none" }} className="text-neutral-focus">
+          These invisible elements allow the dynamic classes to compile
+        </div>
+        <div style={{ display: "none" }} className="text-base-300">
+          These invisible elements allow the dynamic classes to compile
+        </div>
+        <h1
+          className={`font-black text-${
+            mode === "dark" ? "neutral-focus" : "base-300"
+          } text-9xl`}
+        >
+          404
+        </h1>
 
-        <p class="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <p className="text-2xl font-bold tracking-tight text-base-content sm:text-4xl">
           Uh-oh!
         </p>
 
-        <p class="mt-4 text-gray-500">We can't find that page.</p>
+        <p class="mt-4 text-base-content">We can't find that page.</p>
 
         <a
           href="#"
