@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
 import { ObjectId } from "mongodb";
+import Center from "@/components/Center";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
@@ -28,14 +29,17 @@ export async function getServerSideProps(context) {
   );
   const { updated_at, created_at, _id, ...otherProps } = data;
 
+  //const userOwnerData =
+
   let styckerData = sampleStyckerCardDataArray;
 
   return {
     props: {
+      user: { name: "hi", about_me: null, avatar_url: null },
       styckerData: styckerData,
       data: {
-        updated_at: updated_at.toString(),
-        created_at: created_at.toString(),
+        updated_at: updated_at?.toString() ?? null,
+        created_at: created_at?.toString() ?? null,
         _id: _id.toJSON(),
         ...otherProps,
       },
@@ -43,7 +47,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function ExpandedPage({ styckerData, data, error }) {
+export default function ExpandedPage({ styckerData, data, user, error }) {
   // const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
 
@@ -77,10 +81,82 @@ export default function ExpandedPage({ styckerData, data, error }) {
 
   return data ? (
     <div className="bg-base-100">
-      <div className="flex mx-20">
-        <div className="grid h-20 flex-grow card rounded-box ">
+      <div className="flex mx-5 xl:mx-20">
+        <div className="grid h-fit w-9/12 flex-auto card rounded-box ">
+          <div style={{ display: "none" }} className="alert-info">
+            These invisible elements allow the dynamic classes to compile
+          </div>
+          <div style={{ display: "none" }} className="alert-warning">
+            These invisible elements allow the dynamic classes to compile
+          </div>
+          <div style={{ display: "none" }} className="alert-success">
+            These invisible elements allow the dynamic classes to compile
+          </div>
+
           <div
-            className={`mt-6 py-4 flex-auto w rounded-xl border bg-base-100`}
+            className={`alert alert-${
+              data.project_status === "awaiting_contribution"
+                ? "info"
+                : data.project_status === "completed"
+                ? "success"
+                : "warning"
+            } shadow-lg mt-4`}
+          >
+            <div>
+              {data.project_status === "awaiting_contribution" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className="stroke-current flex-shrink-0 w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              ) : data.project_status === "completed" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current flex-shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className="stroke-current flex-shrink-0 w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              )}
+              <span>
+                {data.project_status === "awaiting_contribution"
+                  ? "This project is awaiting contribution"
+                  : data.project_status === "completed"
+                  ? "This project has been completed!"
+                  : "This project is in progress."}
+              </span>
+            </div>
+          </div>
+          <div
+            className={`mt-4 py-4 flex-auto w rounded-xl border bg-base-100`}
             style={{
               borderColor:
                 wrappedMode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
@@ -104,8 +180,8 @@ export default function ExpandedPage({ styckerData, data, error }) {
               )}
             </div>
           </div>
-          <div className=" flex flex-wrap relative mt-2">
-            <h1 className="text-5xl font-bold left-0 mt-3">{data.title}</h1>
+          <div className=" flex flex-wrap relative ">
+            <h1 className="text-5xl font-bold left-0 mt-2">{data.title}</h1>
 
             <div className="absolute right-0 space-x-4 ">
               {data?.contribution_links?.map((item) => {
@@ -117,7 +193,7 @@ export default function ExpandedPage({ styckerData, data, error }) {
                     {item.icon_url === "github" ? (
                       <IconBrandGithub
                         size={"1.5em"}
-                        className="mr-0.5 ml-1.5"
+                        className="mb-0.5 mr-1.5"
                       />
                     ) : item.icon_url === "buymeacoffee" ? (
                       <IconCup size={"1.5em"} className="mb-0.5 mr-1.5" />
@@ -127,7 +203,7 @@ export default function ExpandedPage({ styckerData, data, error }) {
                         className="mb-0.5 mr-1.5"
                       />
                     ) : (
-                      <IconLink size={"1.5em"} className="mr-0.5 ml-1.5" />
+                      <IconLink size={"1.5em"} className="mb-0.5 mr-1.5" />
                     )}
                     {item.display_name}
                   </button>
@@ -157,32 +233,28 @@ export default function ExpandedPage({ styckerData, data, error }) {
         <div style={{ display: "none" }} className="border-base-300">
           These invisible elements allow the dynamic classes to compile
         </div>
-        <div className="divider divider-horizontal h-full min-h-screen"></div>
-        <div className="mt-6 grid h-20 flex-grow card  rounded-box place-items-center">
+        <div className="hidden xl:block divider divider-horizontal h-full min-h-screen"></div>
+        <div className="hidden xl:block mt-6 grid h-20 flex-auto w-3/12 card  rounded-box place-items-center">
           <div
             className={`card w-96 border border-${
               wrappedMode === "dark" ? "neutral-focus" : "base-300"
             }`}
           >
-            <figure>
-              <img
-                src="https://img.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
-                alt="car!"
-              />
-            </figure>
+            {user.avatar_url ? (
+              <figure>
+                <img src={user.avatar_url} alt={user.name + "'s Avatar"} />
+              </figure>
+            ) : (
+              ""
+            )}
             <div className="card-body">
-              <h2 className="card-title">Owner Name</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipiscing elit netus
-                litora purus, mi tincidunt lobortis parturient integer porttitor
-                vivamus vulputate urna leo penatibus, commodo euismod donec
-                ornare per felis fusce ut enim.
-              </p>
+              <h2 className="card-title">{user.name}</h2>
+              <p>{user?.about_me || "This user has no about me."}</p>
             </div>
           </div>
           <div className="divider">
             <span>
-              More by <span className="italic">Owner Name</span>
+              More by <span className="italic">{user.name}</span>
             </span>
           </div>
           <div>
@@ -203,20 +275,75 @@ export default function ExpandedPage({ styckerData, data, error }) {
                   </div>
                 );
               })}
-              <Link href="#">
-                <div className="link text-center my-6">
-                  <span className="relative">
-                    See more{"ㅤ"}
-                    <IconLink
-                      size={"1em"}
-                      className="inline-flex self-center absolute mt-1 left-[4.3rem]"
-                    />
-                  </span>
-                </div>
-              </Link>
             </div>
+            <Link href="#" className="flex justify-center">
+              <div className="link relative text-center my-6">
+                <span className="relative">
+                  See more{"ㅤ"}
+                  <IconLink
+                    size={"1em"}
+                    className="inline-flex self-center absolute mt-1 left-[4.3rem]"
+                  />
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
+      </div>
+
+      <div className="xl:hidden mt-6 grid h-20 flex-auto card  rounded-box place-items-center">
+        <div
+          className={`card mx-8 sm:w-2/3 md:w-1/2 border border-${
+            wrappedMode === "dark" ? "neutral-focus" : "base-300"
+          }`}
+        >
+          <figure>
+            <img
+              src="https://img.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
+              alt="car!"
+            />
+          </figure>
+          <div className="card-body">
+            <h2 className="card-title">{user.name}</h2>
+            <p>{user?.about_me || "This user has no about me."}</p>
+          </div>
+        </div>
+        <div className="divider">
+          <span>
+            More by <span className="italic">{user.name}</span>
+          </span>
+        </div>
+        <div>
+          <div className="w-10/12 mt-2 ">
+            {styckerData.slice(0, 5).map((cardData) => {
+              return (
+                <div key={cardData.id} className="mt-8">
+                  <StyckerCard
+                    image={cardData.image}
+                    user={{
+                      name: cardData.user.name,
+                      avatar_url: cardData.user.avatar_url,
+                    }}
+                    title={cardData.title}
+                    description={cardData.description}
+                    tags={cardData.tags}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <Link href="#">
+          <div className="link text-center my-6">
+            <span className="relative">
+              See more{"ㅤ"}
+              <IconLink
+                size={"1em"}
+                className="inline-flex self-center absolute mt-1 left-[4.3rem]"
+              />
+            </span>
+          </div>
+        </Link>
       </div>
     </div>
   ) : (
