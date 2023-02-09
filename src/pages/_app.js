@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }) {
       );
     }
     setLocalStorageTheme(localStorage.getItem("theme"));
-  }, []);
+  }, [dark]);
 
   return (
     <SessionContextProvider

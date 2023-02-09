@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable camelcase */
+// import { useEffect, useState } from "react";
 import {
   IconBrandCashapp,
   IconBrandGithub,
@@ -9,10 +11,8 @@ import { createSampleStyckerCardDataArray } from "../../../.testing/createSample
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
 import { ObjectId } from "mongodb";
-import Center from "@/components/Center";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
@@ -25,18 +25,18 @@ export async function getServerSideProps(context) {
 
   const data = await spCollection.findOne(
     { _id: new ObjectId(id) }
-    //{ projection: { _id: 0 } }
+    // { projection: { _id: 0 } }
   );
   const { updated_at, created_at, _id, ...otherProps } = data;
 
-  //const userOwnerData =
+  // const userOwnerData =
 
-  let styckerData = sampleStyckerCardDataArray;
+  const styckerData = sampleStyckerCardDataArray;
 
   return {
     props: {
       user: { name: "hi", about_me: null, avatar_url: null },
-      styckerData: styckerData,
+      styckerData,
       data: {
         updated_at: updated_at?.toString() ?? null,
         created_at: created_at?.toString() ?? null,
@@ -51,18 +51,21 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
   // const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
 
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useRouter();
+  // const { id } = router.query;
 
-  const [wrappedMode, setWrappedMode] = useState("light");
+  // const [wrappedMode, setWrappedMode] = useState("light");
 
-  useEffect(() => {
-    // setWrappedMode(mode);
-  }, [mode]);
+  /* useEffect(() => {
+    setWrappedMode(mode);
+    setTimeout(() => {
+      setWrappedMode(mode);
+    }, 300);
+  }, [mode]); */
 
-  //const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   // Preload data
-  /*useEffect(() => {
+  /* useEffect(() => {
     async function preloadData() {
       if (!id) return;
       try {
@@ -77,7 +80,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
     }
     if (!id || id.length < 12) setData(null);
     else preloadData();
-  }, [id]);*/
+  }, [id]); */
 
   return data ? (
     <div className="bg-base-100">
@@ -159,9 +162,9 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
             className={`mt-4 py-4 flex-auto w rounded-xl border bg-base-100`}
             style={{
               borderColor:
-                wrappedMode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
+                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
               backgroundImage: `radial-gradient(circle at 2px 2px, ${
-                wrappedMode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
+                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
               } 1px, transparent 0)`,
               backgroundSize: "12px 12px",
             }}
@@ -171,11 +174,13 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                 <img
                   src={data?.image}
                   className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                  alt="Stycker cover image"
                 />
               ) : (
                 <img
                   src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
                   className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                  alt="Stycker cover image"
                 />
               )}
             </div>
@@ -237,7 +242,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
         <div className="hidden xl:block mt-6 grid h-20 flex-auto w-3/12 card  rounded-box place-items-center">
           <div
             className={`card w-96 border border-${
-              wrappedMode === "dark" ? "neutral-focus" : "base-300"
+              mode === "dark" ? "neutral-focus" : "base-300"
             }`}
           >
             {user.avatar_url ? (
@@ -294,7 +299,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
       <div className="xl:hidden mt-6 grid h-20 flex-auto card  rounded-box place-items-center">
         <div
           className={`card mx-8 sm:w-2/3 md:w-1/2 border border-${
-            wrappedMode === "dark" ? "neutral-focus" : "base-300"
+            mode === "dark" ? "neutral-focus" : "base-300"
           }`}
         >
           <figure>
@@ -357,7 +362,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
         </div>
         <h1
           className={`font-black text-${
-            wrappedMode === "dark" ? "neutral-focus" : "base-300"
+            mode === "dark" ? "neutral-focus" : "base-300"
           } text-9xl`}
         >
           404
