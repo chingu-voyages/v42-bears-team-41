@@ -18,6 +18,21 @@ export default function App({ Component, pageProps }) {
   const [localStorageTheme, setLocalStorageTheme] = useState();
 
   useEffect(() => {
+    if (!dark) {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+      document.documentElement.style.setProperty(
+        "background-color",
+        "hsl(var(--b1))"
+      );
+    } else {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.style.setProperty(
+        "background-color",
+        "hsl(var(--b1))"
+      );
+    }
     setLocalStorageTheme(localStorage.getItem("theme"));
   }, []);
 
@@ -30,8 +45,27 @@ export default function App({ Component, pageProps }) {
         defaultTheme={localStorageTheme || (dark ? DarkTheme : LightTheme)}
       >
         <DaisyThemeSetter>
-          <ThemeToggle className="absolute top-0 right-0 mt-4 mr-4" />
-          <Component {...pageProps} />
+          <div
+            style={{
+              position: "fixed",
+              padding: 0,
+              margin: 0,
+
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+
+              width: "100%",
+              height: "100%",
+              background: "hsl(var(--b1))",
+
+              overflow: "auto",
+            }}
+          >
+            <ThemeToggle className="absolute top-0 right-0 mt-4 mr-4" />
+            <Component {...pageProps} />
+          </div>
         </DaisyThemeSetter>
       </ThemeProvider>
     </SessionContextProvider>

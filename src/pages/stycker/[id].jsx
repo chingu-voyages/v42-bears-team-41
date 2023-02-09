@@ -10,20 +10,46 @@ import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
+import { ObjectId } from "mongodb";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
 
-export default function ExpandedPage() {
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+  const spCollection = await MongoSideProjectCollection();
+
+  if (!id || !ObjectId.isValid(id)) return { props: { error: "invalid_id" } };
+
+  const data = await spCollection.findOne(
+    { _id: new ObjectId(id) }
+    //{ projection: { _id: 0 } }
+  );
+  const { updated_at, created_at, _id, ...otherProps } = data;
+
+  return {
+    props: {
+      data: {
+        updated_at: updated_at.toString(),
+        created_at: created_at.toString(),
+        _id: _id.toJSON(),
+        ...otherProps,
+      },
+    }, // will be passed to the page component as props
+  };
+}
+
+export default function ExpandedPage({ data, error }) {
   const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
 
   const router = useRouter();
   const { id } = router.query;
 
-  const [data, setData] = useState(null);
+  //const [data, setData] = useState(null);
   // Preload data
-  useEffect(() => {
+  /*useEffect(() => {
     async function preloadData() {
       if (!id) return;
       try {
@@ -38,7 +64,7 @@ export default function ExpandedPage() {
     }
     if (!id || id.length < 12) setData(null);
     else preloadData();
-  }, [id]);
+  }, [id]);*/
 
   return data ? (
     <div className="bg-base-100">
@@ -82,34 +108,22 @@ export default function ExpandedPage() {
                     {item.icon_url === "github" ? (
                       <IconBrandGithub
                         size={"1.5em"}
-                        className="mb-0.5 ml-1.5"
+                        className="mr-0.5 ml-1.5"
                       />
                     ) : item.icon_url === "buymeacoffee" ? (
-                      <IconCup size={"1.5em"} className="mb-0.5 ml-1.5" />
+                      <IconCup size={"1.5em"} className="mb-0.5 mr-1.5" />
                     ) : item.icon_url === "cashlink" ? (
                       <IconBrandCashapp
                         size={"1.5em"}
-                        className="mb-0.5 ml-1.5"
+                        className="mb-0.5 mr-1.5"
                       />
                     ) : (
-                      "ic"
+                      <IconLink size={"1.5em"} className="mr-0.5 ml-1.5" />
                     )}
                     {item.display_name}
                   </button>
                 );
               })}
-              <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4">
-                Donate
-                <IconBrandCashapp size={"1.5em"} className="mb-0.5 ml-1.5" />
-              </button>
-              <button className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn  my-4 ">
-                Buy Me a Coffee
-                <IconCup size={"1.5em"} className="mb-0.5 ml-1.5" />
-              </button>
-              <button className="btn btn-outline hover:text-neutral-content gap-2 sm:btn-xs md:btn-sm  lg:btn  my-4 ">
-                Contribute
-                <IconBrandGithub size={"1.5em"} className="mb-0.5 ml-1.5" />
-              </button>
             </div>
           </div>
           <p className="py-6">{data?.description}</p>
