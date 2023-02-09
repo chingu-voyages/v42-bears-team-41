@@ -28,8 +28,11 @@ export async function getServerSideProps(context) {
   );
   const { updated_at, created_at, _id, ...otherProps } = data;
 
+  let styckerData = sampleStyckerCardDataArray;
+
   return {
     props: {
+      styckerData: styckerData,
       data: {
         updated_at: updated_at.toString(),
         created_at: created_at.toString(),
@@ -40,12 +43,18 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function ExpandedPage({ data, error }) {
-  const [styckerData] = useState(sampleStyckerCardDataArray);
+export default function ExpandedPage({ styckerData, data, error }) {
+  // const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
 
   const router = useRouter();
   const { id } = router.query;
+
+  const [wrappedMode, setWrappedMode] = useState("light");
+
+  useEffect(() => {
+    // setWrappedMode(mode);
+  }, [mode]);
 
   //const [data, setData] = useState(null);
   // Preload data
@@ -74,9 +83,9 @@ export default function ExpandedPage({ data, error }) {
             className={`mt-6 py-4 flex-auto w rounded-xl border bg-base-100`}
             style={{
               borderColor:
-                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
+                wrappedMode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
               backgroundImage: `radial-gradient(circle at 2px 2px, ${
-                mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
+                wrappedMode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
               } 1px, transparent 0)`,
               backgroundSize: "12px 12px",
             }}
@@ -152,7 +161,7 @@ export default function ExpandedPage({ data, error }) {
         <div className="mt-6 grid h-20 flex-grow card  rounded-box place-items-center">
           <div
             className={`card w-96 border border-${
-              mode === "dark" ? "neutral-focus" : "base-300"
+              wrappedMode === "dark" ? "neutral-focus" : "base-300"
             }`}
           >
             <figure>
@@ -221,7 +230,7 @@ export default function ExpandedPage({ data, error }) {
         </div>
         <h1
           className={`font-black text-${
-            mode === "dark" ? "neutral-focus" : "base-300"
+            wrappedMode === "dark" ? "neutral-focus" : "base-300"
           } text-9xl`}
         >
           404
