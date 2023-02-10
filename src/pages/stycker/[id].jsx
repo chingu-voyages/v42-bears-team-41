@@ -10,6 +10,7 @@ import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 // DO NOT PUSH TO PROD
 const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
@@ -57,14 +58,16 @@ export default function ExpandedPage() {
           >
             <div className=" justify-center my-2 flex space-x-8">
               {data?.image && data?.image.length > 0 ? (
-                <img
+                <Image
                   src={data?.image}
                   className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                  alt="stycker image"
                 />
               ) : (
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
                   className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
+                  alt="stycker image"
                 />
               )}
             </div>
@@ -142,8 +145,8 @@ export default function ExpandedPage() {
             }`}
           >
             <figure>
-              <img
-                src="https://img.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
+              <Image
+                src="https://Image.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
                 alt="car!"
               />
             </figure>
