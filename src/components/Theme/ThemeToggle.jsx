@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useTheme } from "../Theme/state";
 
 export function ThemeToggle({ size = 20, ...props }) {
-  const { actualMode, toggleTheme } = useTheme();
+  const { mode, toggleTheme } = useTheme();
+  const actualMode = mode;
   // needed for Next.js SSR
   const [wrappedMode, setWrappedMode] = useState("light");
 
