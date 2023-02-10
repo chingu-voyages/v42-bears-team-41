@@ -3,7 +3,6 @@ import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { isLoggedIn } from "@/backend/auth/isLoggedIn";
 import { NavPages } from "@/config/defaults.config";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
