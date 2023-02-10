@@ -203,8 +203,8 @@ export default function ExplorePage() {
               {styckerData.map((cardData) => {
                 return (
                   <LinkWrapper
-                    href={cardData?.href || "#"}
-                    key={cardData?.id}
+                    href={`/stycker/${cardData?._id}`}
+                    key={cardData?._id}
                     className="flex justify-center"
                   >
                     <StyckerCardWithFixedAdjustableHeight
