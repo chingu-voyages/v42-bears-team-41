@@ -3,6 +3,7 @@ import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { isLoggedIn } from "@/backend/auth/isLoggedIn";
 import { NavPages } from "@/config/defaults.config";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -232,15 +233,18 @@ export default function Navigation() {
               {loggedIn && (
                 <div>
                   <li>
+                    <Link href="/new">New Stycker</Link>
+                  </li>
+                  <li>
+                    <Link href="/my">My Styckers</Link>
+                  </li>
+                  <li>
                     <a className="justify-between">
                       Profile
                       <span className="badge badge-secondary badge-outline">
                         New
                       </span>
                     </a>
-                  </li>
-                  <li>
-                    <a>Settings</a>
                   </li>
                 </div>
               )}
