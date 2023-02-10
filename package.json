@@ -26,7 +26,8 @@
     "react-cool-dimensions": "^3.0.0",
     "react-dom": "18.2.0",
     "react-responsive-masonry": "^2.1.7",
-    "react-tailwindcss-select": "^1.6.0"
+    "react-tailwindcss-select": "^1.6.0",
+    "typescript": "^4.9.5"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

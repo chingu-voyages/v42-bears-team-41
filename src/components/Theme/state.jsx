@@ -18,6 +18,13 @@ export const ThemeProvider = ({ defaultTheme, children }) => {
 
   const toggleTheme = () => {
     setTheme(mode === "dark" ? LightTheme : DarkTheme);
+    if (mode === "dark") {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
     localStorage.setItem("mode", mode);
   };
 
