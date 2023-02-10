@@ -12,7 +12,17 @@ module.exports = {
   plugins: [DaisyUI],
 
   daisyui: {
-    themes: ["emerald", "night"],
+    themes: [
+      {
+        emerald: {
+          ...require("daisyui/src/colors/themes")["[data-theme=emerald]"],
+          "--animation-btn": "0.25s",
+          "--animation-input": "0.2s",
+          "--btn-focus-scale": "0.95",
+        },
+        night: require("daisyui/src/colors/themes")["[data-theme=night]"],
+      },
+    ],
     darkTheme: "night",
   },
 };
