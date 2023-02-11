@@ -31,7 +31,16 @@ export default function ProfileExamplePage() {
   const onSubmit = (data) => console.log(data);
 
   const target = useRef(null);
-  const isHovering = useHover(target, { enterDelay: 0, leaveDelay: 0 });
+  const isHoveringUnWrapped = useHover(target, {
+    enterDelay: 0,
+    leaveDelay: 0,
+  });
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    setIsHovering(isHoveringUnWrapped);
+  }, [isHoveringUnWrapped]);
 
   return (
     <div>
