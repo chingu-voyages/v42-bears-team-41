@@ -1,13 +1,15 @@
 import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { updateProfile } from "@/backend/auth/updateProfile";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { DividerArea } from "@/components/DividerArea";
 import Center from "@/components/Center";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { TextareaAutosize } from "@mui/base";
+import useHover from "@react-hook/hover";
+import { IconCamera } from "@tabler/icons-react";
 
 export default function ProfileExamplePage() {
   const [user, setUser] = useState({});
@@ -23,41 +25,39 @@ export default function ProfileExamplePage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm();
 
   const onSubmit = (data) => console.log(data);
+
+  const target = useRef(null);
+  const isHovering = useHover(target, { enterDelay: 0, leaveDelay: 0 });
 
   return (
     <div>
       <div className="flex justify-center my-10">
         <div className="m-10">
-          <div className="avatar">
-            <div className="rounded">
-              <Image
-                src={user.avatar_url}
-                alt="profile picture"
-                width={400}
-                height={200}
-              />
+          <Center>
+            <div className="avatar">
+              <div
+                className="w-96 h-96 rounded-full mx-auto relative"
+                ref={target}
+              >
+                <Image
+                  src={user.avatar_url}
+                  alt="profile picture"
+                  fill // required
+                  style={{ objectFit: "cover" }}
+                />
+                {isHovering && (
+                  <>
+                    <div class="absolute inset-0 bg-base-100 bg-opacity-30 transition-opacity"></div>
+                    <IconCamera className="text-base-100 w-1/2 h-1/2 absolute top-1/4 left-1/4" />
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label
-              className="mt-5 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              About Me
-            </label>
-            <TextareaAutosize
-              className="textarea textarea-bordered w-3/12"
-              placeholder="About Me"
-              minRows={3}
-              defaultValue={user.about_me}
-              {...register("about_me")}
-            />
-          </div>
+          </Center>
         </div>
 
         <form
@@ -73,7 +73,7 @@ export default function ProfileExamplePage() {
                 Full Name
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="input input-bordered w-full max-w-xs"
                 id="grid-name"
                 type="name"
                 placeholder="Full Name"
@@ -90,7 +90,7 @@ export default function ProfileExamplePage() {
                 Username
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="input input-bordered w-full max-w-xs"
                 id="grid-username"
                 type="username"
                 placeholder="Username"
@@ -98,6 +98,7 @@ export default function ProfileExamplePage() {
               />
             </div>
 
+            {/*
             <div className="w-full p-2">
               <label
                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -106,12 +107,13 @@ export default function ProfileExamplePage() {
                 Password
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="input input-bordered w-full max-w-xs"
                 id="grid-password"
                 type="password"
                 placeholder="******************"
               />
             </div>
+  */}
 
             <div className="w-full p-2">
               <label
@@ -121,35 +123,53 @@ export default function ProfileExamplePage() {
                 Website
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="input input-bordered w-full max-w-xs"
                 id="grid-website"
                 type="website"
                 placeholder="Personal Website"
                 value={user.website}
               />
             </div>
+            <div className="w-full p-2">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                About Me
+              </label>
+              <TextareaAutosize
+                className="w-full textarea textarea-bordered"
+                placeholder="About Me"
+                minRows={3}
+                defaultValue={user.about_me}
+                {...register("about_me")}
+              />
+            </div>
+
+            <div className="w-full p-2 flex justify-between">
+              <button
+                className="btn btn-primary"
+                disabled={!isDirty}
+                onClick={() => {
+                  const user = {
+                    id: "e298331f-69c6-441f-8371-d4fb25fb6494",
+                    username: "ultra",
+                    avatar_url: "https://picsum.photos/500/500",
+                    website: "https://example.org",
+                    full_name: "Rando Person",
+                    updated_at: null,
+                    about_me: "I am a Rando Person",
+                    favorite_list: ["BSON"],
+                  };
+                  updateProfile(user, supabase);
+                }}
+              >
+                Save changes
+              </button>
+
+              <button className="btn btn-error">Delete Account</button>
+            </div>
           </div>
-
-          <button
-            className="btn"
-            onClick={() => {
-              const user = {
-                id: "e298331f-69c6-441f-8371-d4fb25fb6494",
-                username: "ultra",
-                avatar_url: "https://picsum.photos/500/500",
-                website: "https://example.org",
-                full_name: "Rando Person",
-                updated_at: null,
-                about_me: "I am a Rando Person",
-                favorite_list: ["BSON"],
-              };
-              updateProfile(user, supabase);
-            }}
-          >
-            Edit Details
-          </button>
-
-          <button className="btn btn-error float-right">Delete Account</button>
         </form>
       </div>
 

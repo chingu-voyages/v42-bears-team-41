@@ -238,12 +238,12 @@ export default function Navigation() {
                     <Link href="/my">My Styckers</Link>
                   </li>
                   <li>
-                    <a className="justify-between">
+                    <Link href="/profile" className="justify-between">
                       Profile
                       <span className="badge badge-secondary badge-outline">
                         New
                       </span>
-                    </a>
+                    </Link>
                   </li>
                 </div>
               )}
