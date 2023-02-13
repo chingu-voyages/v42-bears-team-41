@@ -8,6 +8,19 @@ import Center from "@/components/Center";
 import Image from "next/image";
 
 export default function ProfileExamplePage() {
+
+  // EXAMPLE PROFILE
+  // const user = {
+  //   id: "e298331f-69c6-441f-8371-d4fb25fb6494",
+  //   username: "ultra",
+  //   avatar_url: "https://picsum.photos/300/400",
+  //   website: "https://example.org",
+  //   full_name: "Rando Person",
+  //   updated_at: null,
+  //   about_me: "I am a Rando Person",
+  //   favorite_list: ["BSON"],
+  // };
+
   const [user, setUser] = useState({});
 
   const supabase = useSupabaseClient();
@@ -93,16 +106,7 @@ export default function ProfileExamplePage() {
           <button
           className="btn"
           onClick={() => {
-            const user = {
-              id: "e298331f-69c6-441f-8371-d4fb25fb6494",
-              username: "ultra",
-              avatar_url: "https://picsum.photos/500/500",
-              website: "https://example.org",
-              full_name: "Rando Person",
-              updated_at: null,
-              about_me: "I am a Rando Person",
-              favorite_list: ["BSON"],
-            };
+            
             updateProfile(user, supabase);
           }}
           >
