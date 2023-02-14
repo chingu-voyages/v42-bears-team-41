@@ -42,7 +42,7 @@ export default function ProfileExamplePage() {
       }.${fileExt}`;
       const filePath = `${fileName}`;
 
-      let { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, file, { upsert: true });
 
@@ -70,7 +70,7 @@ export default function ProfileExamplePage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { isDirty },
   } = useForm({
     defaultValues: useMemo(() => {
       return rawUser;
