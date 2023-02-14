@@ -1,103 +1,34 @@
-/* eslint-disable camelcase */
-// import { easyLoadUser } from "@/backend/auth/easyGetUser";
 // import { updateProfile } from "@/backend/auth/updateProfile";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+// import { easyLoadUser } from "@/backend/auth/easyGetUser";
+// import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+// import { useEffect, useState } from "react";
 
 import { DividerArea } from "@/components/DividerArea";
 import Center from "@/components/Center";
 import Image from "next/image";
 
-export default function Account({ session }) {
-  const supabase = useSupabaseClient()
-  const user = useUser()
-  const [avatar_url] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [about_me, setAboutMe] = useState(null)
-  const [full_name, setFullName] = useState(null)
-  const [username, setUsername] = useState(null)
-  const [website, setWebsite] = useState(null)
-  const [favorite_list, setFavoriteList] = useState(true)
+export default function ProfileExamplePage() {
+  // add user variable when removing example profile
+  // const [user, setUser] = useState({});
 
-  useEffect(() => {
-    getProfile()
-  }, [session])
+  // EXAMPLE PROFILE
+  const user = {
+    id: "e298331f-69c6-441f-8371-d4fb25fb6494",
+    username: "ultra",
+    avatar_url: "https://picsum.photos/500/500",
+    website: "https://example.org",
+    full_name: "Rando Person",
+    updated_at: null,
+    about_me: "I am a Rando Person",
+    favorite_list: ["BSON"],
+  };
 
-async function getProfile() {
-  try {
-    setLoading(true)
+  // const supabase = useSupabaseClient();
+  // const supabaseUser = useUser();
 
-    const { data, error, status } = await supabase
-      .from('profiles')
-      .select(`about_me, full_name, username, website, favorite_list, avatar_url`)
-      .eq('id', user.id)
-      .single()
-
-    if (error && status !== 406) {
-      throw error
-    }
-
-    if (data) {
-      setAboutMe(data.about_me)
-      setFullName(data.full_name)
-      setUsername(data.username)
-      setWebsite(data.website)
-      setFavoriteList(data.favorite_list)
-    }
-  } catch (error) {
-    alert('Error loading user data!')
-    console.log(error)
-  } finally {
-    setLoading(false)
-  }
-}
-
-async function updateProfile({ about_me, full_name, username, website, favorite_list }) {
-  try {
-    setLoading(true)
-
-    const updates = {
-      id: user.id,
-      full_name,
-      username,
-      website,
-      about_me,
-      favorite_list,
-      updated_at: new Date().toISOString(),
-    }
-
-    const { error } = await supabase.from('profiles').upsert(updates)
-    if (error) throw error
-    alert('Profile updated!')
-  } catch (error) {
-    alert('Error updating the data!')
-    console.log(error)
-  } finally {
-    setLoading(false)
-  }
-}
-
-// export default function ProfileExamplePage() {
-//   const [user, setUser] = useState({});
-
-//   // TEST PROFILE
-//   // const user = {
-//   //   id: "e298331f-69c6-441f-8371-d4fb25fb6494",
-//   //   username: "ultra",
-//   //   avatar_url: "https://picsum.photos/500/500",
-//   //   website: "https://example.org",
-//   //   full_name: "Rando Person",
-//   //   updated_at: null,
-//   //   about_me: "I am a Rando Person",
-//   //   favorite_list: ["BSON"],
-//   // };
-
-//   const supabase = useSupabaseClient();
-//   const supabaseUser = useUser();
-
-//   useEffect(() => {
-//     if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser);
-//   }, [supabase, supabaseUser]);
+  // useEffect(() => {
+  //   if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser);
+  // }, [supabase, supabaseUser]);
 
   return (
     <div>      
@@ -106,22 +37,18 @@ async function updateProfile({ about_me, full_name, username, website, favorite_
         <div className="m-10">
           <div className="avatar block">
             <div className="rounded max-w-s max-h-52 mx-auto">
-              <Image 
-                src={avatar_url} 
-                alt="profile picture" 
-                width={400} height={200}/>
+              <Image src={user.avatar_url} alt="profile picture" width={400} height={200}/>
             </div>
           </div>
 
           <div>
-            <label className="mt-5 block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="grid-first-name">
+            <label className="mt-5 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
               About Me
             </label>
             <textarea 
-              className="textarea-md appearance-none block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" 
+              className="textarea-md appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
               placeholder="About Me"
-              value={about_me || ''}
-              onChange={(e) => setAboutMe(e.target.value)}/>
+              value={user.about_me}/>
           </div>
         </div>
 
@@ -129,53 +56,50 @@ async function updateProfile({ about_me, full_name, username, website, favorite_
           <div className="flex flex-wrap -mx-3 mb-6">
 
           <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="grid-name">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-name">
                 Full Name
               </label>
               <input 
-                className="appearance-none block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                 id="grid-name" 
-                type="text" 
+                type="name" 
                 placeholder="Full Name"
-                value={full_name || ''}
-                onChange={(e) => setFullName(e.target.value)}/>
+                value={user.full_name}/>
             </div>
 
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="grid-username">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-username">
                 Username
               </label>
               <input 
-                className="appearance-none block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                 id="grid-username" 
-                type="text" 
+                type="username" 
                 placeholder="Username"
-                value={username || ''}
-                onChange={(e) => setUsername(e.target.value)}/>
+                value={user.username}/>
             </div>
 
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="grid-password">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
                 Password
               </label>
               <input 
-                className="appearance-none block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                 id="grid-password" 
-                type="text" 
+                type="password" 
                 placeholder="******************"/>
             </div>
 
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-xs font-bold mb-2" htmlFor="grid-website">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-website">
                 Website
               </label>
               <input 
-                className="appearance-none block w-full bg-gray-200 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                 id="grid-website" 
-                type="text" 
+                type="website" 
                 placeholder="Personal Website"
-                value={website || ''}
-                onChange={(e) => setWebsite(e.target.value)}/>
+                value={user.website}/>
             </div>
           </div>
 
@@ -184,22 +108,14 @@ async function updateProfile({ about_me, full_name, username, website, favorite_
           // onClick={() => {
           //   updateProfile(user, supabase);
           // }}
-          onClick={() => updateProfile({ about_me, full_name, username, website, favorite_list })}
-          disabled={loading}
           >
-            {loading ? 'Loading ...' : 'Update'}
             Edit Details
           </button>
 
-          {/* <button
+          <button
           className="btn btn-error float-right">
             Delete Account
-          </button> */}
-
-          <button className="button block" onClick={() => supabase.auth.signOut()}>
-            Sign Out
           </button>
-
         </form>
       </div>
 
@@ -207,7 +123,7 @@ async function updateProfile({ about_me, full_name, username, website, favorite_
         <Center className={"mt-2"}>
           <div className="w-10/12 relative">
             <div className="h-12 absolute left-0">
-            <label className="my-3 block uppercase tracking-wide text-xs font-bold" htmlFor="grid-first-name">
+            <label className="my-3 block uppercase tracking-wide text-gray-700 text-xs font-bold" htmlFor="grid-first-name">
               My Projects
             </label>
             </div>
