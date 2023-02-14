@@ -1,7 +1,7 @@
 import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { updateProfile } from "@/backend/auth/updateProfile";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DividerArea } from "@/components/DividerArea";
 import Center from "@/components/Center";
@@ -10,25 +10,81 @@ import { useForm } from "react-hook-form";
 import { TextareaAutosize } from "@mui/base";
 import useHover from "@react-hook/hover";
 import { IconCamera } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 
 export default function ProfileExamplePage() {
+  const [uploading, setUploading] = useState(false);
+
+  const router = useRouter();
+
   const [user, setUser] = useState({});
+  const [rawUser, setRawUser] = useState({});
 
   const supabase = useSupabaseClient();
   const supabaseUser = useUser();
 
   useEffect(() => {
-    if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser);
+    if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser, setRawUser);
   }, [supabaseUser, supabase]);
+
+  const uploadAvatar = async (event) => {
+    try {
+      setUploading(true);
+
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error("You must select an image to upload.");
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${Math.random()}.${
+        user.id
+      }.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      let { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const userUpData = {
+        id: user.id,
+        avatar_url: (
+          await supabase.storage.from("avatars").getPublicUrl(filePath)
+        ).data.publicUrl,
+      };
+      updateProfile(userUpData, supabase);
+      router.reload();
+    } catch (error) {
+      alert("Error uploading avatar!");
+      console.log(error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
     formState: { errors, isDirty },
-  } = useForm();
+  } = useForm({
+    defaultValues: useMemo(() => {
+      return rawUser;
+    }, [rawUser]),
+  });
 
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    if (!isDirty) reset(rawUser);
+  }, [rawUser]);
+
+  const onSubmit = (data) => {
+    updateProfile(data, supabase);
+    router.reload();
+  };
 
   const target = useRef(null);
   const isHoveringUnWrapped = useHover(target, {
@@ -47,17 +103,21 @@ export default function ProfileExamplePage() {
       <div className="flex justify-center my-10">
         <div className="m-10">
           <Center>
-            <div className="avatar">
+            <label className="avatar" htmlFor="single">
               <div
                 className="w-96 h-96 rounded-full mx-auto relative"
                 ref={target}
               >
-                <Image
-                  src={user.avatar_url}
-                  alt="profile picture"
-                  fill // required
-                  style={{ objectFit: "cover" }}
-                />
+                {user.avatar_url ? (
+                  <Image
+                    src={user.avatar_url}
+                    alt="profile picture"
+                    fill // required
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  "no avatar"
+                )}
                 {isHovering && (
                   <>
                     <div class="absolute inset-0 bg-base-100 bg-opacity-30 transition-opacity"></div>
@@ -65,7 +125,18 @@ export default function ProfileExamplePage() {
                   </>
                 )}
               </div>
-            </div>
+            </label>
+            <input
+              style={{
+                visibility: "hidden",
+                position: "absolute",
+              }}
+              type="file"
+              id="single"
+              accept="image/*"
+              onChange={uploadAvatar}
+              disabled={uploading}
+            />
           </Center>
         </div>
 
@@ -86,7 +157,6 @@ export default function ProfileExamplePage() {
                 id="grid-name"
                 type="name"
                 placeholder="Full Name"
-                defaultValue={user.full_name}
                 {...register("full_name")}
               />
             </div>
@@ -136,7 +206,7 @@ export default function ProfileExamplePage() {
                 id="grid-website"
                 type="website"
                 placeholder="Personal Website"
-                value={user.website}
+                {...register("website")}
               />
             </div>
             <div className="w-full p-2">
@@ -150,33 +220,21 @@ export default function ProfileExamplePage() {
                 className="w-full textarea textarea-bordered"
                 placeholder="About Me"
                 minRows={3}
-                defaultValue={user.about_me}
                 {...register("about_me")}
               />
             </div>
 
             <div className="w-full p-2 flex justify-between">
-              <button
+              <input
+                type="submit"
                 className="btn btn-primary"
                 disabled={!isDirty}
-                onClick={() => {
-                  const user = {
-                    id: "e298331f-69c6-441f-8371-d4fb25fb6494",
-                    username: "ultra",
-                    avatar_url: "https://picsum.photos/500/500",
-                    website: "https://example.org",
-                    full_name: "Rando Person",
-                    updated_at: null,
-                    about_me: "I am a Rando Person",
-                    favorite_list: ["BSON"],
-                  };
-                  updateProfile(user, supabase);
-                }}
-              >
-                Save changes
-              </button>
+                value="Save changes"
+              />
 
-              <button className="btn btn-error">Delete Account</button>
+              <button className="btn btn-error" type="button">
+                Delete Account
+              </button>
             </div>
           </div>
         </form>
