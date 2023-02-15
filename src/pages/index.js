@@ -47,7 +47,7 @@ export default function Home() {
               </Link>
             </div>
             <div
-              className={`flex-auto w rounded-xl border bg-base-100 sm:max-h-screen`}
+              className={`flex-auto w rounded-xl border bg-base-100 sm:max-h-screen lg:max-h-full`}
               style={{
                 borderColor:
                   mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
