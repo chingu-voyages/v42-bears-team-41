@@ -20,8 +20,8 @@ export default function ProfileExamplePage() {
   const [user, setUser] = useState({});
   const [rawUser, setRawUser] = useState({});
 
-  const supabase = useSupabaseClient();
-  const supabaseUser = useUser();
+  // const supabase = useSupabaseClient();
+  // const supabaseUser = useUser();
 
   useEffect(() => {
     if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser, setRawUser);
@@ -99,8 +99,9 @@ export default function ProfileExamplePage() {
   }, [isHoveringUnWrapped]);
 
   return (
-    <div>
-      <div className="flex justify-center my-10">
+    <div>      
+      <div className="flex flex-col sm:flex-row justify-center my-10">
+
         <div className="m-10">
           <Center>
             <label className="avatar" htmlFor="single">
