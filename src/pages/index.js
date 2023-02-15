@@ -3,6 +3,7 @@ import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import 'animate.css'
 
 export default function Home() {
   const [doubleSampleStyckerData, setDoubleSampleStyckerData] = useState([]);
@@ -28,7 +29,7 @@ export default function Home() {
         <div className="hero-content pr-8">
           <div className="flex">
             <div className="mt-16 flex-auto max-w-lg flex-col">
-              <h1 className="text-6xl font-bold">
+              <h1 className="text-6xl font-bold animate__animated animate__zoomInDown">
                 Welcome to <span className="text-accent">Stycker!</span>
               </h1>
               <h2 className="font-bold text-xl mt-4">
