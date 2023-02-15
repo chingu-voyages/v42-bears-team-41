@@ -144,7 +144,7 @@ export default function ProfileExamplePage() {
           onSubmit={handleSubmit(onSubmit)}
           className="grow w-full max-w-lg mx-10"
         >
-          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="flex flex-wrap w-full mb-6">
             <div className="w-full p-2">
               <label
                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
