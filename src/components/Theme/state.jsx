@@ -21,9 +21,17 @@ export const ThemeProvider = ({ defaultTheme, children }) => {
     if (mode === "dark") {
       document.documentElement.classList.remove("dark");
       document.documentElement.setAttribute("data-theme", "light");
+      document.documentElement.style.setProperty(
+        "background-color",
+        "hsl(var(--b1))"
+      );
     } else {
       document.documentElement.classList.add("dark");
       document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.style.setProperty(
+        "background-color",
+        "hsl(var(--b1))"
+      );
     }
     localStorage.setItem("mode", mode);
   };

@@ -1,121 +1,242 @@
-// import { updateProfile } from "@/backend/auth/updateProfile";
-// import { easyLoadUser } from "@/backend/auth/easyGetUser";
-// import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-// import { useEffect, useState } from "react";
+import { easyLoadUser } from "@/backend/auth/easyGetUser";
+import { updateProfile } from "@/backend/auth/updateProfile";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DividerArea } from "@/components/DividerArea";
 import Center from "@/components/Center";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { TextareaAutosize } from "@mui/base";
+import useHover from "@react-hook/hover";
+import { IconCamera } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 
 export default function ProfileExamplePage() {
-  // add user variable when removing example profile
-  // const [user, setUser] = useState({});
+  const [uploading, setUploading] = useState(false);
 
-  // EXAMPLE PROFILE
-  const user = {
-    id: "e298331f-69c6-441f-8371-d4fb25fb6494",
-    username: "ultra",
-    avatar_url: "https://picsum.photos/500/500",
-    website: "https://example.org",
-    full_name: "Rando Person",
-    updated_at: null,
-    about_me: "I am a Rando Person",
-    favorite_list: ["BSON"],
+  const router = useRouter();
+
+  const [user, setUser] = useState({});
+  const [rawUser, setRawUser] = useState({});
+
+  const supabase = useSupabaseClient();
+  const supabaseUser = useUser();
+
+  useEffect(() => {
+    if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser, setRawUser);
+  }, [supabaseUser, supabase]);
+
+  const uploadAvatar = async (event) => {
+    try {
+      setUploading(true);
+
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error("You must select an image to upload.");
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${Math.random()}.${
+        user.id
+      }.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const userUpData = {
+        id: user.id,
+        avatar_url: (
+          await supabase.storage.from("avatars").getPublicUrl(filePath)
+        ).data.publicUrl,
+      };
+      updateProfile(userUpData, supabase);
+      router.reload();
+    } catch (error) {
+      alert("Error uploading avatar!");
+      console.log(error);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  // const supabase = useSupabaseClient();
-  // const supabaseUser = useUser();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm({
+    defaultValues: useMemo(() => {
+      return rawUser;
+    }, [rawUser]),
+  });
 
-  // useEffect(() => {
-  //   if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser);
-  // }, [supabase, supabaseUser]);
+  useEffect(() => {
+    if (!isDirty) reset(rawUser);
+  }, [rawUser]);
+
+  const onSubmit = (data) => {
+    updateProfile(data, supabase);
+    router.reload();
+  };
+
+  const target = useRef(null);
+  const isHoveringUnWrapped = useHover(target, {
+    enterDelay: 0,
+    leaveDelay: 0,
+  });
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    setIsHovering(isHoveringUnWrapped);
+  }, [isHoveringUnWrapped]);
 
   return (
-    <div>      
+    <div>
       <div className="flex flex-col sm:flex-row justify-center my-10">
-
         <div className="m-10">
-          <div className="avatar block">
-            <div className="rounded max-w-s max-h-52 mx-auto">
-              <Image src={user.avatar_url} alt="profile picture" width={400} height={200}/>
-            </div>
-          </div>
-
-          <div>
-            <label className="mt-5 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-              About Me
+          <Center>
+            <label className="avatar" htmlFor="single">
+              <div
+                className="w-96 h-96 rounded-full mx-auto relative"
+                ref={target}
+              >
+                {user.avatar_url ? (
+                  <Image
+                    src={user.avatar_url}
+                    alt="profile picture"
+                    fill // required
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  "no avatar"
+                )}
+                {isHovering && (
+                  <>
+                    <div class="absolute inset-0 bg-base-100 bg-opacity-30 transition-opacity"></div>
+                    <IconCamera className="text-base-100 w-1/2 h-1/2 absolute top-1/4 left-1/4" />
+                  </>
+                )}
+              </div>
             </label>
-            <textarea 
-              className="textarea-md appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-              placeholder="About Me"
-              value={user.about_me}/>
-          </div>
+            <input
+              style={{
+                visibility: "hidden",
+                position: "absolute",
+              }}
+              type="file"
+              id="single"
+              accept="image/*"
+              onChange={uploadAvatar}
+              disabled={uploading}
+            />
+          </Center>
         </div>
 
-        <form className="grow max-w-lg mx-10">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grow w-full max-w-lg mx-10"
+        >
           <div className="flex flex-wrap -mx-3 mb-6">
-
-          <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-name">
+            <div className="w-full p-2">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-name"
+              >
                 Full Name
               </label>
-              <input 
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                id="grid-name" 
-                type="name" 
+              <input
+                className="input input-bordered w-full max-w-xs"
+                id="grid-name"
+                type="name"
                 placeholder="Full Name"
-                value={user.full_name}/>
+                {...register("full_name")}
+              />
             </div>
 
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-username">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-username"
+              >
                 Username
               </label>
-              <input 
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                id="grid-username" 
-                type="username" 
+              <input
+                className="input input-bordered w-full max-w-xs"
+                id="grid-username"
+                type="username"
                 placeholder="Username"
-                value={user.username}/>
+                value={user.username}
+              />
             </div>
 
+            {/*
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-password"
+              >
                 Password
               </label>
-              <input 
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                id="grid-password" 
-                type="password" 
-                placeholder="******************"/>
+              <input
+                className="input input-bordered w-full max-w-xs"
+                id="grid-password"
+                type="password"
+                placeholder="******************"
+              />
             </div>
+  */}
 
             <div className="w-full p-2">
-              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-website">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-website"
+              >
                 Website
               </label>
-              <input 
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
-                id="grid-website" 
-                type="website" 
+              <input
+                className="input input-bordered w-full max-w-xs"
+                id="grid-website"
+                type="website"
                 placeholder="Personal Website"
-                value={user.website}/>
+                {...register("website")}
+              />
+            </div>
+            <div className="w-full p-2">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                About Me
+              </label>
+              <TextareaAutosize
+                className="w-full textarea textarea-bordered"
+                placeholder="About Me"
+                minRows={3}
+                {...register("about_me")}
+              />
+            </div>
+
+            <div className="w-full p-2 flex justify-between">
+              <input
+                type="submit"
+                className="btn btn-primary"
+                disabled={!isDirty}
+                value="Save changes"
+              />
+
+              <button className="btn btn-error" type="button">
+                Delete Account
+              </button>
             </div>
           </div>
-
-          <button
-          className="btn"
-          // onClick={() => {
-          //   updateProfile(user, supabase);
-          // }}
-          >
-            Edit Details
-          </button>
-
-          <button
-          className="btn btn-error float-right">
-            Delete Account
-          </button>
         </form>
       </div>
 
@@ -123,9 +244,12 @@ export default function ProfileExamplePage() {
         <Center className={"mt-2"}>
           <div className="w-10/12 relative">
             <div className="h-12 absolute left-0">
-            <label className="my-3 block uppercase tracking-wide text-gray-700 text-xs font-bold" htmlFor="grid-first-name">
-              My Projects
-            </label>
+              <label
+                className="my-3 block uppercase tracking-wide text-gray-700 text-xs font-bold"
+                htmlFor="grid-first-name"
+              >
+                My Projects
+              </label>
             </div>
 
             <div className="absolute inset-x-1/2">
@@ -136,13 +260,12 @@ export default function ProfileExamplePage() {
 
             <div className="absolute right-0 mr-4 h-12 min-w-[12%]">
               <button className="btn -mt-1 btn-success">
-                  Create New Project
+                Create New Project
               </button>
             </div>
           </div>
         </Center>
       </DividerArea>
-
     </div>
   );
 }
