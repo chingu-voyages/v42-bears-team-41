@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import Center from "@/components/Center";
 import { TextareaAutosize } from "@mui/base";
