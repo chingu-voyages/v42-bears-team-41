@@ -1,5 +1,5 @@
 import { DarkTheme, LightTheme } from "@/config/defaults.config";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const ThemeContext = createContext(null);
 
@@ -9,11 +9,20 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ defaultTheme, children }) => {
   const [theme, setThemeOrigin] = useState(defaultTheme);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const mode = theme === DarkTheme ? "dark" : "light";
 
-  const setTheme = (theme) => {
+  useEffect(() => {
+    if (!hasUserInteracted) {
+      setThemeOrigin(defaultTheme);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultTheme]);
+
+  const setTheme = (theme, isUserInvoked = false) => {
     setThemeOrigin(theme);
     localStorage.setItem("theme", theme);
+    if (isUserInvoked) setHasUserInteracted(true);
   };
 
   const toggleTheme = () => {
@@ -34,6 +43,8 @@ export const ThemeProvider = ({ defaultTheme, children }) => {
       );
     }
     localStorage.setItem("mode", mode);
+
+    setHasUserInteracted(true);
   };
 
   return (
