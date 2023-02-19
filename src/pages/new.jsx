@@ -4,11 +4,15 @@ import Center from "@/components/Center";
 import { TextareaAutosize } from "@mui/base";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
 import { AspectRatio } from "react-aspect-ratio";
+
+import Select from "react-tailwindcss-select";
+import SelectStyle from "@/styles/SelectStyle";
+import { filterValues } from "@/config/defaults.config";
 
 export default function NewStycker() {
   const { mode } = useTheme();
@@ -24,6 +28,12 @@ export default function NewStycker() {
 
   const [user, setUser] = useState({});
   const [rawUser, setRawUser] = useState({});
+
+  const [filters, setFilters] = useState(null);
+
+  const handleFilterChange = (value) => {
+    setFilters(value);
+  };
 
   const [imageURL, setImageURL] = useState(null);
   const [rawImageURL, setRawImageURL] = useState(null);
@@ -68,7 +78,7 @@ export default function NewStycker() {
             These invisible elements allow the dynamic classes to compile{" "}
           </div>
           <Dropzone
-            className={`rounded-xl bg-base-100 hover:bg-base-200 border-[1.5px] border-dashed border-${
+            className={`rounded-xl bg-base-100 hover:bg-base-200 border-[2px] border-dashed border-${
               mode === "dark" ? "neutral-focus" : "base-300"
             }`}
             accept={IMAGE_MIME_TYPE}
@@ -163,27 +173,16 @@ export default function NewStycker() {
             />
           </div>
           <div className="w-full p-2">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-username"
-            ></label>
-            <input
-              className="input input-bordered w-full "
-              placeholder="Title"
-              {...register("title")}
-            />
-          </div>
-          <div className="w-full p-2">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-username"
-            >
-              Title
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+              Tags
             </label>
-            <input
-              className="input input-bordered w-full "
-              placeholder="Title"
-              {...register("title")}
+            <Select
+              value={filters}
+              onChange={handleFilterChange}
+              options={filterValues}
+              isMultiple
+              isSearchable
+              classNames={SelectStyle}
             />
           </div>
         </form>
