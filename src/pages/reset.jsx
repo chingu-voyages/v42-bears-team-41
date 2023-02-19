@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="flex h-screen">
       <div className="m-auto">
-        <div className="drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-8">
+        <div className="my-2 drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-8">
           <div className="grid card rounded-box place-items-center">
             <h2 className="text-xl mt-2">Reset your password</h2>
             <div className="mt-4 form-control w-full max-w-xs">

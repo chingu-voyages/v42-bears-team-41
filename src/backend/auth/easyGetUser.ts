@@ -19,3 +19,11 @@ export async function easyLoadUser(
     if (callback2) callback2(null);
   }
 }
+
+export async function easyLoadUserServer(
+  supabase: SupabaseClient,
+  supabaseUser: User
+) {
+  const u = await TryGetUser(supabase, supabaseUser.id);
+  return CombineUsers(u, supabaseUser);
+}
