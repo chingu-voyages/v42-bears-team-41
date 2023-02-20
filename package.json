@@ -20,6 +20,7 @@
     "@supabase/supabase-js": "^2.5.0",
     "@tabler/icons-react": "^2.1.1",
     "@tailwindcss/typography": "^0.5.9",
+    "cookies-next": "^2.1.1",
     "daisyui": "^2.47.0",
     "eslint-config-next": "13.1.2",
     "is-valid-http-url": "^1.0.3",

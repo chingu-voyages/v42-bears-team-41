@@ -4,46 +4,27 @@ import Layout from "@/components/Layout";
 import "@/styles/globals.css";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { getCookie } from "cookies-next";
+import App, { AppContext, AppProps, AppInitialProps } from "next/app";
 
-export default function App({ Component, pageProps }) {
-  let dark = false;
-  if (typeof window !== "undefined") {
-    // Client-side-only code
-    dark =
-      localStorage.getItem("mode") ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
+type AppOwnProps = { colorScheme: string };
+
+export default function AppWrap({
+  Component,
+  pageProps,
+  colorScheme,
+}: AppProps & AppOwnProps) {
   const [supabase] = useState(() => createBrowserSupabaseClient());
-  const [localStorageTheme, setLocalStorageTheme] = useState();
+  const defaultTheme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
-  useEffect(() => {
-    if (!dark) {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.setAttribute("data-theme", "light");
-      document.documentElement.style.setProperty(
-        "background-color",
-        "hsl(var(--b1))"
-      );
-    } else {
-      document.documentElement.classList.add("dark");
-      document.documentElement.setAttribute("data-theme", "dark");
-      document.documentElement.style.setProperty(
-        "background-color",
-        "hsl(var(--b1))"
-      );
-    }
-    setLocalStorageTheme(localStorage.getItem("theme"));
-  }, [dark]);
-
+  console.log(defaultTheme);
   return (
     <SessionContextProvider
       supabaseClient={supabase}
       initialSession={pageProps.initialSession}
     >
-      <ThemeProvider
-        defaultTheme={localStorageTheme || (dark ? DarkTheme : LightTheme)}
-      >
+      <ThemeProvider defaultTheme={defaultTheme}>
         <DaisyThemeSetter>
           <div
             style={{
@@ -62,7 +43,7 @@ export default function App({ Component, pageProps }) {
 
               overflow: "auto",
             }}
-          >          
+          >
             <Layout>
               <Component {...pageProps} />
             </Layout>
@@ -81,3 +62,19 @@ function DaisyThemeSetter({ children }) {
     </div>
   );
 }
+
+AppWrap.getInitialProps = async (
+  context: AppContext
+): Promise<AppOwnProps & AppInitialProps> => {
+  const ctx = await App.getInitialProps(context);
+
+  return {
+    // get color scheme from cookie
+    colorScheme:
+      `${getCookie("mantine-color-scheme", {
+        req: context.ctx.req,
+        res: context.ctx.res,
+      })}` || "light",
+    ...ctx,
+  };
+};
