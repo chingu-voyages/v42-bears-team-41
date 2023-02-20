@@ -11,11 +11,11 @@ import Image from "next/image";
 import validateURL from "valid-url";
 import isUrl from "is-valid-http-url";
 import Select from "react-tailwindcss-select";
-import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import LinkCafe from "@/components/LinkCafe";
+import { SelectStyleDarkResponsive } from "../styles/SelectStyle";
 
 export const getServerSideProps = async (ctx) => {
   // Create authenticated Supabase Client
@@ -272,7 +272,7 @@ export default function NewStycker() {
               options={filterValues}
               isMultiple
               isSearchable
-              classNames={SelectStyle}
+              classNames={SelectStyleDarkResponsive(mode === "dark")}
             />
           </div>
           <div className="w-full p-2">
@@ -293,7 +293,7 @@ export default function NewStycker() {
                       label: "Awaiting Contribution",
                     },
                   ]}
-                  classNames={SelectStyle}
+                  classNames={SelectStyleDarkResponsive(mode === "dark")}
                 />
               )}
             />

@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
 import Select from "react-tailwindcss-select";
-import SelectStyle from "@/styles/SelectStyle";
+import { SelectStyleDarkResponsive } from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
 import LinkCafe from "@/components/LinkCafe";
@@ -334,7 +334,7 @@ export default function NewStycker({ data }) {
               options={filterValues}
               isMultiple
               isSearchable
-              classNames={SelectStyle}
+              classNames={SelectStyleDarkResponsive(mode === "dark")}
             />
           </div>
           <div className="w-full p-2">
@@ -356,7 +356,7 @@ export default function NewStycker({ data }) {
                       label: "Awaiting Contribution",
                     },
                   ]}
-                  classNames={SelectStyle}
+                  classNames={SelectStyleDarkResponsive(mode === "dark")}
                 />
               )}
             />
