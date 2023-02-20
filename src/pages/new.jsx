@@ -8,7 +8,8 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
-
+import validateURL from "valid-url";
+import isUrl from "is-valid-http-url";
 import Select from "react-tailwindcss-select";
 import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
@@ -312,7 +313,8 @@ export default function NewStycker() {
                       value.text &&
                       value.type &&
                       value.text.length > 0 &&
-                      value.type !== "invalid"
+                      value.type !== "invalid" &&
+                      isUrl(validateURL.isWebUri(value.text))
                     );
                   });
                 },

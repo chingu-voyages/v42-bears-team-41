@@ -19,6 +19,9 @@ import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
 import LinkCafe from "@/components/LinkCafe";
 import { ObjectId } from "mongodb";
+import validateURL from "valid-url";
+
+import isUrl from "is-valid-http-url";
 
 export const getServerSideProps = async (ctx) => {
   const spCollection = await MongoSideProjectCollection();
@@ -372,7 +375,8 @@ export default function NewStycker({ data }) {
                       value.text &&
                       value.type &&
                       value.text.length > 0 &&
-                      value.type !== "invalid"
+                      value.type !== "invalid" &&
+                      isUrl(validateURL.isWebUri(value.text))
                     );
                   });
                 },
