@@ -98,15 +98,15 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
 
           <div
             className={`alert alert-${
-              data.project_status === "awaiting_contribution"
+              data.status === "awaiting_contribution"
                 ? "info"
-                : data.project_status === "completed"
+                : data.status === "completed"
                 ? "success"
                 : "warning"
             } shadow-lg mt-4`}
           >
             <div>
-              {data.project_status === "awaiting_contribution" ? (
+              {data.status === "awaiting_contribution" ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -120,7 +120,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   ></path>
                 </svg>
-              ) : data.project_status === "completed" ? (
+              ) : data.status === "completed" ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="stroke-current flex-shrink-0 h-6 w-6"
@@ -150,9 +150,9 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                 </svg>
               )}
               <span>
-                {data.project_status === "awaiting_contribution"
+                {data.status === "awaiting_contribution"
                   ? "This project is awaiting contribution"
-                  : data.project_status === "completed"
+                  : data.status === "completed"
                   ? "This project has been completed!"
                   : "This project is in progress."}
               </span>

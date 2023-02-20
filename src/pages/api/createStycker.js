@@ -76,6 +76,7 @@ export default async function handler(req, res) {
       favorites,
       user,
       contribution_links,
+      status,
       ...deConstructedStycker
     } = constructedStycker;
     const data = await spCollection.insertOne({
@@ -84,6 +85,8 @@ export default async function handler(req, res) {
         avatar_url: suuser.avatar_url,
         id: suuser.id,
       },
+
+      status: status?.value ?? status ?? "in_progress",
       owner_user_id: suuser.id,
       created_at: date,
       updated_at: date,

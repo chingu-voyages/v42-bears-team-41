@@ -88,6 +88,7 @@ export default async function handler(req, res) {
       views,
       favorites,
       user,
+      status,
       contribution_links,
       ...deConstructedStycker
     } = constructedStycker;
@@ -95,6 +96,7 @@ export default async function handler(req, res) {
       _id: new ObjectId(objectToUpdate_id),
       favorites: 1,
       views: 1,
+      status: status?.value ?? status ?? "in_progress",
       created_at: oldObject.created_at,
       user: {
         name: suuser.full_name,
