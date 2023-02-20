@@ -12,6 +12,7 @@ import useHover from "@react-hook/hover";
 import { IconCamera } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import MyProjectLister from "../components/MyProjectLister";
 
 export const getServerSideProps = async (ctx) => {
   // Create authenticated Supabase Client
@@ -267,32 +268,7 @@ export default function ProfilePage() {
         </form>
       </div>
 
-      <DividerArea className="bg-base-100 h-14 sticky mt-12 top-0 z-10 border-y border-base-content border-dashed">
-        <Center className={"mt-2"}>
-          <div className="w-10/12 relative">
-            <div className="h-12 absolute left-0">
-              <label
-                className="my-3 block uppercase tracking-wide text-gray-700 text-xs font-bold"
-                htmlFor="grid-first-name"
-              >
-                My Projects
-              </label>
-            </div>
-
-            <div className="absolute inset-x-1/2">
-              {/*
-              Reserved for future use (positioned in center)
-              */}
-            </div>
-
-            <div className="absolute right-0 mr-4 h-12 min-w-[12%]">
-              <button className="btn -mt-1 btn-success">
-                Create New Project
-              </button>
-            </div>
-          </div>
-        </Center>
-      </DividerArea>
+      <MyProjectLister />
     </div>
   );
 }
