@@ -5,7 +5,7 @@ import { TextareaAutosize } from "@mui/base";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { appendErrors, Controller, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
 import { AspectRatio } from "react-aspect-ratio";
