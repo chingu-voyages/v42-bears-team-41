@@ -1,12 +1,20 @@
 import { IconMinus } from "@tabler/icons-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 export default function LinkCafe({ value, onChange }) {
-  const [internalValue, setInternalValue] = useState(value);
+  const [internalValue, setActualInternalValue] = useState(value);
 
-  useEffect(() => {
-    onChange(internalValue);
-  }, [internalValue]);
+  const setInternalValue = (val) => {
+    onChange(val);
+  };
+
+  useMemo(() => {
+    setActualInternalValue(value);
+  }, [value]);
+
+  // useEffect(() => {
+  //  onChange(internalValue);
+  // }, [internalValue]);
 
   useEffect(() => {
     // setInternalValue(value);
