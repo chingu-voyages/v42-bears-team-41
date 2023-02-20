@@ -2,8 +2,6 @@ import { easyLoadUser } from "@/backend/auth/easyGetUser";
 import { updateProfile } from "@/backend/auth/updateProfile";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-
-import { DividerArea } from "@/components/DividerArea";
 import Center from "@/components/Center";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
