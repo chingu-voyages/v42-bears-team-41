@@ -11,8 +11,35 @@ import { TextareaAutosize } from "@mui/base";
 import useHover from "@react-hook/hover";
 import { IconCamera } from "@tabler/icons-react";
 import { useRouter } from "next/router";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-export default function ProfileExamplePage() {
+export const getServerSideProps = async (ctx) => {
+  // Create authenticated Supabase Client
+
+  const supabase = createServerSupabaseClient(ctx);
+  // Check if we have a session
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user,
+    },
+  };
+};
+
+export default function ProfilePage() {
   const [uploading, setUploading] = useState(false);
 
   const router = useRouter();
@@ -144,7 +171,7 @@ export default function ProfileExamplePage() {
           onSubmit={handleSubmit(onSubmit)}
           className="grow max-w-lg mx-10"
         >
-          <div className="flex flex-wrap -mx-3 mb-6">
+          <div className="flex flex-wrap w-full mb-6">
             <div className="w-full p-2">
               <label
                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"

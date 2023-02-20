@@ -24,10 +24,10 @@ export default function Home() {
 
   return (
     <>
-      <div className="hero min-h-screen bg-base-100 -mt-12">
+      <div className="hero min-h-screen bg-base-100">
         <div className="hero-content pr-8">
-          <div className="lg:flex">
-            <div className="mt-16 text-center lg:text-start flex-auto max-w-lg flex-col pb-8">
+          <div className="flex">
+            <div className=" flex-auto max-w-lg flex-col">
               <h1 className="text-6xl font-bold">
                 Welcome to <span className="text-accent">Stycker!</span>
               </h1>

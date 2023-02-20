@@ -47,7 +47,7 @@ export default function LoginPage() {
   return (
     <div className="flex h-screen">
       <div className="m-auto">
-        <div className="drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-6">
+        <div className="drop-shadow-xl flex flex-col w-[32rem] border-secondary border bg-base-200 rounded-2xl py-6 my-2">
           <div className="grid card rounded-box place-items-center">
             <h1 className="text-4xl font-bold">
               Welcome to <span className="text-accent">Stycker</span>!

@@ -15,3 +15,9 @@ export const NavPages = [
     ],
   },
 ];
+
+export const filterValues = [
+  { value: "fox", label: "🦊 Fox" },
+  { value: "Butterfly", label: "🦋 Butterfly" },
+  { value: "Honeybee", label: "🐝 Honeybee" },
+];

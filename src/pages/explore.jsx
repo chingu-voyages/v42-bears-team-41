@@ -7,12 +7,8 @@ import SelectStyle from "@/styles/SelectStyle";
 import { sortByValues } from "@/config/enums/sortByValues";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { LinkWrapper } from "@/components/LinkWrapper";
+import { filterValues } from "@/config/defaults.config";
 
-const filterValues = [
-  { value: "fox", label: "🦊 Fox" },
-  { value: "Butterfly", label: "🦋 Butterfly" },
-  { value: "Honeybee", label: "🐝 Honeybee" },
-];
 const itemsPerLoad = 50;
 
 // DO NOT PUSH TO PROD
