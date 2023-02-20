@@ -15,6 +15,7 @@ import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import LinkCafe from "@/components/LinkCafe";
 
 export const getServerSideProps = async (ctx) => {
   // Create authenticated Supabase Client
@@ -297,6 +298,19 @@ export default function NewStycker() {
                   ]}
                   classNames={SelectStyle}
                 />
+              )}
+            />
+          </div>
+          <div className="w-full p-2">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+              Contribution Links
+            </label>
+            <Controller
+              control={control}
+              defaultValue={[]}
+              name="contribution_links"
+              render={({ field: { value, onChange } }) => (
+                <LinkCafe value={value} onChange={onChange} />
               )}
             />
           </div>
