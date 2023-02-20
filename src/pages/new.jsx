@@ -305,14 +305,30 @@ export default function NewStycker() {
             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               Contribution Links
             </label>
+            {}
             <Controller
               control={control}
               defaultValue={[]}
+              rules={{
+                validate: (value, formValues) => {
+                  return value.every((value) => {
+                    return (
+                      value.text &&
+                      value.type &&
+                      value.text.length > 0 &&
+                      value.type !== "invalid"
+                    );
+                  });
+                },
+              }}
               name="contribution_links"
               render={({ field: { value, onChange } }) => (
                 <LinkCafe value={value} onChange={onChange} />
               )}
             />
+            {errors.contribution_links && (
+              <p className="text-error mt-2">{"Invalid Contribution Links."}</p>
+            )}
           </div>
           <div className="w-full p-2">
             <button
