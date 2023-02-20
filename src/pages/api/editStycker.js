@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
+import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { easyLoadUserServer } from "@/backend/auth/easyGetUser";
+import { easyLoadUserServer } from "../../backend/auth/easyGetUser";
 
 export function matchDisplayNameToType(type) {
   switch (type) {
@@ -66,6 +66,14 @@ export default async function handler(req, res) {
   const date = new Date(Date.now());
 
   const objectToUpdate_id = constructedStycker._id;
+  const oldObject = await spCollection.findOne({ _id: objectToUpdate_id });
+
+  if (!(user.id === oldObject.owner_user_id)) {
+    return res.status(403).json({
+      error: "forbidden",
+      description: "The user does not match the user on file.",
+    });
+  }
 
   try {
     // Make sure some properties aren't specified, to avoid conflicts
@@ -87,10 +95,7 @@ export default async function handler(req, res) {
         id: user.id,
       },
       owner_user_id: user.id,
-      created_at: date,
       updated_at: date,
-      views: 1,
-      favorites: 1,
       ...deConstructedStycker,
       contribution_links: contribution_links.map((value) => {
         return {
