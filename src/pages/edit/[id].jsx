@@ -13,7 +13,6 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
-import { AspectRatio } from "react-aspect-ratio";
 import Select from "react-tailwindcss-select";
 import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
