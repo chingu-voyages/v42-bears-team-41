@@ -211,20 +211,16 @@ export default function NewStycker() {
               </div>
             ) : (
               <>
-                <AspectRatio
-                  ratio="16/9"
-                  style={{
-                    minWidth: "12rem",
-                    maxWidth: "26rem" /* equivalent of tailwindCSS w-72 */,
-                  }}
-                >
-                  <Image
-                    fill
-                    style={{ objectFit: "contain" }}
-                    src={imageURL}
-                    alt="Banner image for your stycker"
-                  />
-                </AspectRatio>
+                <Center>
+                  <div className="w-96 h-60 relative">
+                    <Image
+                      fill
+                      style={{ objectFit: "contain" }}
+                      src={imageURL}
+                      alt="Banner image for your stycker"
+                    />
+                  </div>
+                </Center>
               </>
             )}
           </Dropzone>
