@@ -9,10 +9,7 @@ export const NavPages = [
   {
     name: "About",
     href: "/about",
-    children: [
-      { name: "sample", href: "/href" },
-      { name: "sample2", href: "/href2" },
-    ],
+    children: [],
   },
 ];
 

@@ -1,17 +1,23 @@
-import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
+import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { sortByValues } from "@/config/enums/sortByValues";
 
 export default async function handler(req, res) {
   const spCollection = await MongoSideProjectCollection();
-  let { sortType, skip = 0, number = 100 /* q = "" */ } = req.query;
+  let {
+    sortType,
+    skip = 0,
+    number = 100,
+    filter = "{}" /* q = "" */,
+  } = req.query;
   skip = parseInt(skip);
   number = parseInt(number);
+  filter = JSON.parse(filter);
 
   if (!sortByValues.some((sortByValue) => sortByValue.value === sortType))
     res.status(400).send("Invalid sortType");
 
   const data = await spCollection
-    .find()
+    .find(filter)
     .sort(sortDefiner(sortType))
     // .filter()
     .skip(skip)

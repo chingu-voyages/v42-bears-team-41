@@ -45,6 +45,18 @@ export default function SignUpPage() {
     }
   }
 
+  async function logInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) {
+      alert(error.message);
+    }
+    if (data?.user?.id) {
+      // Code to run on successful login
+    }
+  }
+
   return (
     <div className="flex h-screen">
       <div className="m-auto">
@@ -96,7 +108,10 @@ export default function SignUpPage() {
           </div>
           <div className="divider my-6">OR</div>
           <div className="grid h-36 card rounded-box place-items-center">
-            <button className="h-8 btn btn-block btn btn-outline btn-secondary max-w-xs ">
+            <button
+              onClick={logInWithGoogle}
+              className="h-8 btn btn-block btn btn-outline btn-secondary max-w-xs "
+            >
               <div className="relative flex justify-center h-full w-full">
                 <GoogleLogo className="flex-none relative my-auto w-5 h-5" />
                 <div className="flex-none relative my-auto  ml-3">
