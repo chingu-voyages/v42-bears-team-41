@@ -56,7 +56,7 @@ export default function NewStycker() {
   });
 
   const [user, setUser] = useState({});
-  const [rawUser, setRawUser] = useState({});
+  // const [rawUser, setRawUser] = useState({});
 
   const [filters, setFilters] = useState(null);
 
@@ -73,7 +73,8 @@ export default function NewStycker() {
   const router = useRouter();
 
   useEffect(() => {
-    if (supabaseUser) easyLoadUser(supabase, supabaseUser, setUser, setRawUser);
+    if (supabaseUser)
+      easyLoadUser(supabase, supabaseUser, setUser /* setRawUser */);
   }, [supabaseUser, supabase]);
 
   const [disabled, setIsDisabled] = useState(false);
