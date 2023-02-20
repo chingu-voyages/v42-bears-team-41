@@ -19,6 +19,7 @@ import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
 import LinkCafe from "@/components/LinkCafe";
+import { ObjectId } from "mongodb";
 
 export const getServerSideProps = async (ctx) => {
   const spCollection = await MongoSideProjectCollection();
@@ -32,9 +33,9 @@ export const getServerSideProps = async (ctx) => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const userRaw = await supabase.auth.getUser();
+  const userRaw = (await supabase.auth.getUser()).data.user;
 
-  if (!session || !userRaw.data.user)
+  if (!session || !userRaw)
     return {
       redirect: {
         destination: "/login",
@@ -54,7 +55,13 @@ export const getServerSideProps = async (ctx) => {
 
   const id = ctx.params.id;
 
-  const oldObject = await spCollection.findOne({ _id: id });
+  const oldObject = await spCollection.findOne({ _id: new ObjectId(id) });
+
+  if (!oldObject)
+    return { redirect: { destination: "/404", permanent: false } };
+
+  console.log(user.id);
+  console.log(oldObject);
 
   if (!(user.id === oldObject.owner_user_id)) {
     return {
@@ -88,7 +95,7 @@ export default function NewStycker({ data }) {
     control,
     handleSubmit,
     // reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
       contribution_links: [...data.contribution_links],
@@ -97,6 +104,8 @@ export default function NewStycker({ data }) {
       status: data.status,
     },
   });
+
+  const AlternateData = data;
 
   const [user, setUser] = useState({});
   // const [rawUser, setRawUser] = useState({});
@@ -127,15 +136,15 @@ export default function NewStycker({ data }) {
       try {
         const data = await (
           await fetch(
-            `/api/createStycker?styckerJSON=${encodeURIComponent(
+            `/api/editStycker?styckerJSON=${encodeURIComponent(
               JSON.stringify(sende)
             )}`
           )
         ).json();
-        if (data.id) router.push(`/stycker/${data.id} `);
+        if (data.c > 0) router.push(`/stycker/${AlternateData._id} `);
         else {
           alert(
-            "Your Stycker could not be created at this time, please try again later."
+            "Your Stycker could not be edited at this time, please try again later."
           );
           console.log(data);
           setIsDisabled(true);
@@ -145,7 +154,7 @@ export default function NewStycker({ data }) {
         }
       } catch (e) {
         alert(
-          "Your Stycker could not be created at this time, please try again later."
+          "Your Stycker could not be edited at this time, please try again later."
         );
         console.log(e);
         setIsDisabled(true);
@@ -154,14 +163,18 @@ export default function NewStycker({ data }) {
         }, 5000);
       }
     }
-    createNewStyckerWithProvidedProps({ data, imageURL });
+    createNewStyckerWithProvidedProps({
+      ...data,
+      imageURL,
+      _id: AlternateData._id,
+    });
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-20">
       <Center>
         <h1 className="text-5xl font-bold mt-10">
-          Create a{" "}
+          Edit your{" "}
           <span
             style={{
               background:
@@ -379,10 +392,10 @@ export default function NewStycker({ data }) {
           <div className="w-full p-2">
             <button
               type="submit"
-              disabled={disabled}
+              disabled={disabled || !isDirty}
               className="mt-2 btn btn-block btn-secondary"
             >
-              Create Stycker
+              Save Changes
             </button>
           </div>
         </form>

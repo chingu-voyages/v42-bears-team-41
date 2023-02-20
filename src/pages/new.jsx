@@ -115,7 +115,7 @@ export default function NewStycker() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-20">
       <Center>
         <h1 className="text-5xl font-bold mt-10">
           Create a{" "}

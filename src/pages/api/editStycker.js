@@ -2,6 +2,7 @@
 import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { easyLoadUserServer } from "../../backend/auth/easyGetUser";
+import { ObjectId } from "mongodb";
 
 export function matchDisplayNameToType(type) {
   switch (type) {
@@ -66,7 +67,9 @@ export default async function handler(req, res) {
   const date = new Date(Date.now());
 
   const objectToUpdate_id = constructedStycker._id;
-  const oldObject = await spCollection.findOne({ _id: objectToUpdate_id });
+  const oldObject = await spCollection.findOne({
+    _id: new ObjectId(objectToUpdate_id),
+  });
 
   if (!(suuser.id === oldObject.owner_user_id)) {
     return res.status(403).json({
@@ -88,7 +91,11 @@ export default async function handler(req, res) {
       contribution_links,
       ...deConstructedStycker
     } = constructedStycker;
-    const data = await spCollection.updateOne({
+    const cc = {
+      _id: new ObjectId(objectToUpdate_id),
+      favorites: 1,
+      views: 1,
+      created_at: oldObject.created_at,
       user: {
         name: suuser.full_name,
         avatar_url: suuser.avatar_url,
@@ -104,9 +111,15 @@ export default async function handler(req, res) {
           display_name: matchDisplayNameToType(value.type),
         };
       }),
-    });
-    return res.status(200).json({ id: data.insertedId });
-  } catch {
+    };
+    console.log(JSON.stringify(cc));
+    const data = await spCollection.replaceOne(
+      { _id: new ObjectId(objectToUpdate_id) },
+      cc
+    );
+    return res.status(200).json({ c: data.modifiedCount });
+  } catch (e) {
+    console.log(e);
     console.log("Error");
     return res.status(400).send("Server Error");
   }
