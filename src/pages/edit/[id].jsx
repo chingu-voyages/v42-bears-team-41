@@ -98,7 +98,9 @@ export default function NewStycker({ data }) {
     formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
-      contribution_links: [...data.contribution_links],
+      contribution_links: [...data.contribution_links].map((val) => {
+        return { type: val.icon_url, text: val.url };
+      }),
       title: data.title,
       description: data.description,
       status: data.status,
