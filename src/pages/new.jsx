@@ -111,7 +111,7 @@ export default function NewStycker() {
         }, 5000);
       }
     }
-    createNewStyckerWithProvidedProps({ data, imageURL });
+    createNewStyckerWithProvidedProps({ ...data, imageURL });
   };
 
   return (

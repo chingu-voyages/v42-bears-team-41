@@ -35,18 +35,18 @@ export default async function handler(req, res) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const userRaw = await supabase.auth.getUser();
+  const userRaw = (await supabase.auth.getUser()).data.user;
 
-  if (!session || !userRaw.data.user)
+  if (!session || !userRaw)
     return res.status(401).json({
       error: "not_authenticated",
       description:
         "The user does not have an active session or is not authenticated",
     });
 
-  const user = await easyLoadUserServer(supabase, userRaw);
+  const suuser = await easyLoadUserServer(supabase, userRaw);
 
-  if (!user)
+  if (!suuser)
     return res.status(401).json({
       error: "not_authenticated",
       description:
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   const objectToUpdate_id = constructedStycker._id;
   const oldObject = await spCollection.findOne({ _id: objectToUpdate_id });
 
-  if (!(user.id === oldObject.owner_user_id)) {
+  if (!(suuser.id === oldObject.owner_user_id)) {
     return res.status(403).json({
       error: "forbidden",
       description: "The user does not match the user on file.",
@@ -90,11 +90,11 @@ export default async function handler(req, res) {
     } = constructedStycker;
     const data = await spCollection.updateOne({
       user: {
-        name: user.name,
-        avatar_url: user.avatar_url,
-        id: user.id,
+        name: suuser.full_name,
+        avatar_url: suuser.avatar_url,
+        id: suuser.id,
       },
-      owner_user_id: user.id,
+      owner_user_id: suuser.id,
       updated_at: date,
       ...deConstructedStycker,
       contribution_links: contribution_links.map((value) => {

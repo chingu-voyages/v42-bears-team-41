@@ -35,18 +35,18 @@ export default async function handler(req, res) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const userRaw = await supabase.auth.getUser();
+  const userRaw = (await supabase.auth.getUser()).data.user;
 
-  if (!session || !userRaw.data.user)
+  if (!session || !userRaw)
     return res.status(401).json({
       error: "not_authenticated",
       description:
         "The user does not have an active session or is not authenticated",
     });
 
-  const user = await easyLoadUserServer(supabase, userRaw);
+  const suuser = await easyLoadUserServer(supabase, userRaw);
 
-  if (!user)
+  if (!suuser)
     return res.status(401).json({
       error: "not_authenticated",
       description:
@@ -80,11 +80,11 @@ export default async function handler(req, res) {
     } = constructedStycker;
     const data = await spCollection.insertOne({
       user: {
-        name: user.name,
-        avatar_url: user.avatar_url,
-        id: user.id,
+        name: suuser?.full_name ?? suuser?.username,
+        avatar_url: suuser.avatar_url,
+        id: suuser.id,
       },
-      owner_user_id: user.id,
+      owner_user_id: suuser.id,
       created_at: date,
       updated_at: date,
       views: 1,
@@ -99,7 +99,8 @@ export default async function handler(req, res) {
       }),
     });
     return res.status(200).json({ id: data.insertedId });
-  } catch {
+  } catch (e) {
+    console.log(e);
     console.log("Error");
     return res.status(400).send("Server Error");
   }
