@@ -24,10 +24,10 @@ export default function Home() {
 
   return (
     <>
-      <div className="hero min-h-screen bg-base-100 -mt-16">
+      <div className="hero min-h-screen bg-base-100 -mt-12">
         <div className="hero-content pr-8">
-          <div className="flex">
-            <div className="mt-16 flex-auto max-w-lg flex-col">
+          <div className="lg:flex">
+            <div className="mt-16 text-center lg:text-start flex-auto max-w-lg flex-col pb-8">
               <h1 className="text-6xl font-bold">
                 Welcome to <span className="text-accent">Stycker!</span>
               </h1>
@@ -41,13 +41,13 @@ export default function Home() {
               </p>
               <Link
                 href="/explore"
-                className="btn btn-sm btn-primary text-center text-sm"
+                className="btn btn-sm btn-primary text-center text-sm my-2"
               >
                 Check It Out!
               </Link>
             </div>
             <div
-              className={`flex-auto w rounded-xl border bg-base-100`}
+              className={`flex-auto w-fit rounded-xl border bg-base-100 sm:max-h-screen lg:max-h-full`}
               style={{
                 borderColor:
                   mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
