@@ -1,5 +1,10 @@
-/* eslint-disable no-unused-vars */
-import { easyLoadUser } from "@/backend/auth/easyGetUser";
+/* eslint-disable camelcase */
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import {
+  easyLoadUserServer,
+  easyLoadUser,
+} from "../../backend/auth/easyGetUser";
+import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import Center from "@/components/Center";
 import { TextareaAutosize } from "@mui/base";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
@@ -9,24 +14,27 @@ import { Controller, useForm } from "react-hook-form";
 import { useTheme } from "@/components/Theme/state";
 import Image from "next/image";
 import { AspectRatio } from "react-aspect-ratio";
-
 import Select from "react-tailwindcss-select";
 import SelectStyle from "@/styles/SelectStyle";
 import { filterValues } from "@/config/defaults.config";
 import { useRouter } from "next/router";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import LinkCafe from "@/components/LinkCafe";
 
 export const getServerSideProps = async (ctx) => {
+  const spCollection = await MongoSideProjectCollection();
+
   // Create authenticated Supabase Client
 
   const supabase = createServerSupabaseClient(ctx);
   // Check if we have a session
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session)
+  const userRaw = await supabase.auth.getUser();
+
+  if (!session || !userRaw.data.user)
     return {
       redirect: {
         destination: "/login",
@@ -34,15 +42,45 @@ export const getServerSideProps = async (ctx) => {
       },
     };
 
+  const user = await easyLoadUserServer(supabase, userRaw);
+
+  if (!user)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+
+  const id = ctx.params.id;
+
+  const oldObject = await spCollection.findOne({ _id: id });
+
+  if (!(user.id === oldObject.owner_user_id)) {
+    return {
+      redirect: {
+        destination: "/accessdenied",
+        permanent: false,
+      },
+    };
+  }
+
+  const { updated_at, created_at, _id, ...otherProps } = oldObject;
   return {
     props: {
       initialSession: session,
       user: session.user,
+      data: {
+        updated_at: updated_at?.toString() ?? null,
+        created_at: created_at?.toString() ?? null,
+        _id: _id.toJSON(),
+        ...otherProps,
+      },
     },
   };
 };
 
-export default function NewStycker() {
+export default function NewStycker({ data }) {
   const { mode } = useTheme();
 
   const {
@@ -52,7 +90,12 @@ export default function NewStycker() {
     // reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {},
+    defaultValues: {
+      contribution_links: [...data.contribution_links],
+      title: data.title,
+      description: data.description,
+      status: data.status,
+    },
   });
 
   const [user, setUser] = useState({});
@@ -64,7 +107,7 @@ export default function NewStycker() {
     setFilters(value);
   };
 
-  const [imageURL, setImageURL] = useState(null);
+  const [imageURL, setImageURL] = useState(data.image);
   const [rawImageURL, setRawImageURL] = useState(null);
 
   const supabase = useSupabaseClient();
@@ -111,7 +154,7 @@ export default function NewStycker() {
         }, 5000);
       }
     }
-    createNewStyckerWithProvidedProps({ ...data, imageURL });
+    createNewStyckerWithProvidedProps({ data, imageURL });
   };
 
   return (
@@ -153,7 +196,9 @@ export default function NewStycker() {
             multiple={false}
             onDrop={async (files) => {
               if (imageURL) {
-                await supabase.storage.from("styckers").remove(rawImageURL);
+                try {
+                  await supabase.storage.from("styckers").remove(rawImageURL);
+                } catch {}
               }
 
               const url = `${
@@ -292,6 +337,7 @@ export default function NewStycker() {
                   onChange={onChange}
                   options={[
                     { value: "in_progress", label: "In Progress" },
+                    { value: "completed", label: "Completed" },
                     {
                       value: "awaiting_contribution",
                       label: "Awaiting Contribution",
@@ -309,7 +355,6 @@ export default function NewStycker() {
             {}
             <Controller
               control={control}
-              defaultValue={[]}
               rules={{
                 validate: (value, formValues) => {
                   return value.every((value) => {
