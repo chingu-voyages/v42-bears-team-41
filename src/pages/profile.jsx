@@ -169,7 +169,7 @@ export default function ProfilePage() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grow w-full max-w-lg mx-10"
+          className="grow max-w-lg mx-10"
         >
           <div className="flex flex-wrap w-full mb-6">
             <div className="w-full p-2">
