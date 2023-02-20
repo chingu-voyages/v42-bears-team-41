@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/about",
+        destination: "https://github.com/chingu-voyages/v42-bears-team-41/",
+        permanent: true,
+      },
+    ];
+  },
   reactStrictMode: true,
   images: {
     domains: [
