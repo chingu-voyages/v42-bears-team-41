@@ -14,9 +14,6 @@ import Link from "next/link";
 import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { ObjectId } from "mongodb";
 
-// DO NOT PUSH TO PROD
-const sampleStyckerCardDataArray = createSampleStyckerCardDataArray(20, 1, 3);
-
 export async function getServerSideProps(context) {
   const { id } = context.query;
   const spCollection = await MongoSideProjectCollection();
