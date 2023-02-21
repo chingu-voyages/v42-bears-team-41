@@ -58,7 +58,9 @@ export default function Home() {
               }}
             >
               <div className="px-4 py-4 ">
-                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                <LinkWrapper
+                  href={`/stycker/${doubleSampleStyckerData[0]?._id}`}
+                >
                   <StyckerCard
                     title={doubleSampleStyckerData[0]?.title}
                     user={doubleSampleStyckerData[0]?.user}
@@ -66,7 +68,9 @@ export default function Home() {
                   />
                 </LinkWrapper>
                 <div className="mt-8" />
-                <LinkWrapper href={doubleSampleStyckerData[1]?.href || "#"}>
+                <LinkWrapper
+                  href={`/stycker/${doubleSampleStyckerData[1]?._id}`}
+                >
                   <StyckerCard
                     title={doubleSampleStyckerData[1]?.title}
                     user={doubleSampleStyckerData[1]?.user}

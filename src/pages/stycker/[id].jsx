@@ -11,7 +11,7 @@ import { createSampleStyckerCardDataArray } from "../../../.testing/createSample
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
-import { MongoSideProjectCollection } from "@/backend/db/StyckerData/sideProjects";
+import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { ObjectId } from "mongodb";
 
 // DO NOT PUSH TO PROD
@@ -31,7 +31,21 @@ export async function getServerSideProps(context) {
 
   // const userOwnerData =
 
-  const styckerData = sampleStyckerCardDataArray;
+  let styckerData = await spCollection
+    .find({
+      owner_user_id: otherProps.owner_user_id,
+    })
+    .toArray();
+
+  styckerData = styckerData.map((doc) => {
+    const { updated_at, created_at, _id, ...otherDocProps } = doc;
+    return {
+      updated_at: updated_at?.toString() ?? null,
+      created_at: created_at?.toString() ?? null,
+      _id: _id.toJSON(),
+      ...otherDocProps,
+    };
+  });
 
   return {
     props: {
@@ -103,7 +117,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                 : data.status === "completed"
                 ? "success"
                 : "warning"
-            } shadow-lg mt-4`}
+            } shadow-md my-4`}
           >
             <div>
               {data.status === "awaiting_contribution" ? (
@@ -159,7 +173,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
             </div>
           </div>
           <div
-            className={`mt-4 py-4 flex-auto w rounded-xl border bg-base-100`}
+            className={`py-4 flex-auto w rounded-xl border bg-base-100`}
             style={{
               borderColor:
                 mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))",
@@ -167,21 +181,18 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                 mode === "dark" ? "hsl(var(--nf))" : "hsl(var(--b3))"
               } 1px, transparent 0)`,
               backgroundSize: "12px 12px",
+              ...(data?.imageURL ? {} : { display: "none" }),
             }}
           >
             <div className=" justify-center my-2 flex space-x-8">
-              {data?.image && data?.image.length > 0 ? (
+              {data?.imageURL && data?.imageURL.length > 0 ? (
                 <img
-                  src={data?.image}
+                  src={data?.imageURL}
                   className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
                   alt="Stycker cover image"
                 />
               ) : (
-                <img
-                  src="https://images.unsplash.com/photo-1655720842809-0db94ab43f02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-                  className="rounded-lg max-w-sm md:max-w-lg  shadow-2xl"
-                  alt="Stycker cover image"
-                />
+                <></>
               )}
             </div>
           </div>
@@ -191,8 +202,9 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
             <div className="absolute right-0 space-x-4 ">
               {data?.contribution_links?.map((item) => {
                 return (
-                  <button
+                  <Link
                     key={item.icon_url + item.url + item.display_name}
+                    href={item.url}
                     className="btn btn-outline hover:text-neutral-content sm:btn-xs md:btn-sm  lg:btn my-4"
                   >
                     {item.icon_url === "github" ? (
@@ -211,7 +223,7 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                       <IconLink size={"1.5em"} className="mb-0.5 mr-1.5" />
                     )}
                     {item.display_name}
-                  </button>
+                  </Link>
                 );
               })}
             </div>

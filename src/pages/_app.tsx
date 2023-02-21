@@ -18,7 +18,6 @@ export default function AppWrap({
   const [supabase] = useState(() => createBrowserSupabaseClient());
   const defaultTheme = colorScheme === "dark" ? DarkTheme : LightTheme;
 
-  console.log(defaultTheme);
   return (
     <SessionContextProvider
       supabaseClient={supabase}
