@@ -7,7 +7,6 @@ import {
   IconCup,
   IconLink,
 } from "@tabler/icons-react";
-import { createSampleStyckerCardDataArray } from "../../../.testing/createSampleStyckerCardData";
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
