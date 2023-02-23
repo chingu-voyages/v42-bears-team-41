@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
   try {
     const data = await spCollection.deleteOne({
-      _id: new ObjectId(objectToUpdate_id),
+      _id: new ObjectId(id),
     });
     return res.status(200).json({ c: data.deletedCount });
   } catch (e) {
