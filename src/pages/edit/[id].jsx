@@ -204,88 +204,97 @@ export default function NewStycker({ data }) {
             {" "}
             These invisible elements allow the dynamic classes to compile{" "}
           </div>
-          <Dropzone
-            className={`rounded-xl bg-base-100 hover:bg-base-200 border-[2px] border-dashed border-${
-              mode === "dark" ? "neutral-focus" : "base-300"
-            }`}
-            accept={IMAGE_MIME_TYPE}
-            maxSize={3 * 1024 ** 2}
-            multiple={false}
-            onDrop={async (files) => {
-              if (imageURL) {
-                try {
-                  await supabase.storage.from("styckers").remove(rawImageURL);
-                } catch {}
-              }
+          <div className="relative inline-flex" style={{ where }}>
+            <div className="indicator-item absolute transform whitespace-nowrap z-10">
+              <button className="btn btn-primary">Apply</button>
+            </div>
+            <Dropzone
+              className={`rounded-xl bg-base-100 hover:bg-base-200 border-[2px] border-dashed border-${
+                mode === "dark" ? "neutral-focus" : "base-300"
+              }`}
+              accept={IMAGE_MIME_TYPE}
+              maxSize={3 * 1024 ** 2}
+              multiple={false}
+              onDrop={async (files) => {
+                if (imageURL) {
+                  try {
+                    await supabase.storage.from("styckers").remove(rawImageURL);
+                  } catch {}
+                }
 
-              const url = `${
-                user.id
-              }/${Math.random()}/${Date.now().toString()}`;
-              const bannerImage = files[0];
-              const { data, error } = await supabase.storage
-                .from("styckers")
-                .upload(url, bannerImage, {
-                  cacheControl: "3600",
-                  upsert: false,
-                });
-              if (error) {
-                alert("Image failed to upload; Check console for more info");
-                alert(JSON.stringify(error + " " + error.message + " " + url));
-                console.error(error);
-              } else if (data) {
-                alert("Image uploaded successfully");
-                setRawImageURL(data.path);
-                setImageURL(
-                  (
-                    await supabase.storage
-                      .from("styckers")
-                      .getPublicUrl(data.path)
-                  ).data.publicUrl
-                );
-              }
-            }}
-          >
-            {!imageURL ? (
-              <div className=" mx-2 py-16">
-                <div className="text-neutral" style={{ display: "none" }}>
-                  {" "}
-                  These invisible elements allow the dynamic classes to compile
-                </div>
-                <div className="text-base-300" style={{ display: "none" }}>
-                  {" "}
-                  These invisible elements allow the dynamic classes to compile{" "}
-                </div>
-                <Center
-                  className={`text-2xl text-${
-                    mode === "dark" ? "text-neutral" : "text-base-300 "
-                  }`}
-                >
-                  Upload Banner
-                </Center>
-
-                <Center
-                  className={`text-md text-${
-                    mode === "dark" ? "text-neutral" : "text-base-300 "
-                  }`}
-                >
-                  Maximum size 5MB
-                </Center>
-              </div>
-            ) : (
-              <>
-                <Center>
-                  <div className="w-96 h-60 relative">
-                    <Image
-                      fill
-                      style={{ objectFit: "contain" }}
-                      src={imageURL}
-                      alt="Banner image for your stycker"
-                    />
+                const url = `${
+                  user.id
+                }/${Math.random()}/${Date.now().toString()}`;
+                const bannerImage = files[0];
+                const { data, error } = await supabase.storage
+                  .from("styckers")
+                  .upload(url, bannerImage, {
+                    cacheControl: "3600",
+                    upsert: false,
+                  });
+                if (error) {
+                  alert("Image failed to upload; Check console for more info");
+                  alert(
+                    JSON.stringify(error + " " + error.message + " " + url)
+                  );
+                  console.error(error);
+                } else if (data) {
+                  alert("Image uploaded successfully");
+                  setRawImageURL(data.path);
+                  setImageURL(
+                    (
+                      await supabase.storage
+                        .from("styckers")
+                        .getPublicUrl(data.path)
+                    ).data.publicUrl
+                  );
+                }
+              }}
+            >
+              {!imageURL ? (
+                <div className=" mx-2 py-16">
+                  <div className="text-neutral" style={{ display: "none" }}>
+                    {" "}
+                    These invisible elements allow the dynamic classes to
+                    compile
                   </div>
-                </Center>
-              </>
-            )}
-          </Dropzone>
+                  <div className="text-base-300" style={{ display: "none" }}>
+                    {" "}
+                    These invisible elements allow the dynamic classes to
+                    compile{" "}
+                  </div>
+                  <Center
+                    className={`text-2xl text-${
+                      mode === "dark" ? "text-neutral" : "text-base-300 "
+                    }`}
+                  >
+                    Upload Banner
+                  </Center>
+
+                  <Center
+                    className={`text-md text-${
+                      mode === "dark" ? "text-neutral" : "text-base-300 "
+                    }`}
+                  >
+                    Maximum size 5MB
+                  </Center>
+                </div>
+              ) : (
+                <>
+                  <Center>
+                    <div className="w-96 h-60 relative ">
+                      <Image
+                        fill
+                        style={{ objectFit: "contain" }}
+                        src={imageURL}
+                        alt="Banner image for your stycker"
+                      />
+                    </div>
+                  </Center>
+                </>
+              )}
+            </Dropzone>
+          </div>
           <div className="w-full p-2 mt-4">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -397,6 +406,23 @@ export default function NewStycker({ data }) {
               className="mt-2 btn btn-block btn-secondary"
             >
               Save Changes
+            </button>
+            <div className="divider">OR</div>
+            <button
+              type="button"
+              onClick={async () => {
+                const res = await fetch(
+                  `/api/deleteStycker?id=${AlternateData._id}`
+                );
+                if (data.error) {
+                  alert(`${data.error}: ${data.description}`);
+                } else if (data.c) {
+                  alert(`Successfully deleted ${c} styckers.`);
+                }
+              }}
+              className="mt-2 btn btn-block btn-error"
+            >
+              Delete this Stycker
             </button>
           </div>
         </form>

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+pn/* eslint-disable camelcase */
 import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { easyLoadUserServer } from "../../backend/auth/easyGetUser";
