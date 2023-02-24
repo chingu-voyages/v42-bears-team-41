@@ -7,11 +7,14 @@ import {
   IconCup,
   IconLink,
 } from "@tabler/icons-react";
+import { Center } from "../../components/Center";
 import { StyckerCard } from "@/components/StyckerCard";
 import { useTheme } from "@/components/Theme/state";
 import Link from "next/link";
 import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { ObjectId } from "mongodb";
+import { easyLoadUserServer } from "../../backend/auth/easyGetUser";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
@@ -24,8 +27,6 @@ export async function getServerSideProps(context) {
     // { projection: { _id: 0 } }
   );
   const { updated_at, created_at, _id, ...otherProps } = data;
-
-  // const userOwnerData =
 
   let styckerData = await spCollection
     .find({
@@ -43,9 +44,29 @@ export async function getServerSideProps(context) {
     };
   });
 
+  const supabase = createServerSupabaseClient({
+    req: context.req,
+    res: context.res,
+  });
+
+  const profile = (
+    await supabase
+      .from("profiles")
+      .select(
+        "id, username, avatar_url, website, full_name, updated_at, id, favorite_list, about_me"
+      )
+      .eq("id", data.owner_user_id)
+      .single()
+  ).data;
+
+  const userRaw = (await supabase.auth.getUser()).data.user;
+
+  const currentUser = await easyLoadUserServer(supabase, userRaw);
+
   return {
     props: {
-      user: { name: "hi", about_me: null, avatar_url: null },
+      currentUser,
+      user: profile,
       styckerData,
       data: {
         updated_at: updated_at?.toString() ?? null,
@@ -57,7 +78,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function ExpandedPage({ styckerData, data, user, error }) {
+export default function ExpandedPage({ styckerData, data, user, currentUser }) {
   // const [styckerData] = useState(sampleStyckerCardDataArray);
   const { mode } = useTheme();
 
@@ -225,20 +246,6 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
             </div>
           </div>
           <p className="py-6">{data?.description}</p>
-          <div>
-            <ul>
-              {data?.contribution_links?.map((item) => {
-                return (
-                  <Link
-                    href={item.url}
-                    key={item.icon_url + item.url + item.display_name}
-                  >
-                    {item.display_name}
-                  </Link>
-                );
-              })}
-            </ul>
-          </div>
         </div>
         <div style={{ display: "none" }} className="border-neutral-focus">
           These invisible elements allow the dynamic classes to compile
@@ -255,19 +262,23 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
           >
             {user.avatar_url ? (
               <figure>
-                <img src={user.avatar_url} alt={user.name + "'s Avatar"} />
+                <img
+                  src={user.avatar_url}
+                  className="rounded-md mt-6"
+                  alt={user.full_name + "'s Avatar"}
+                />
               </figure>
             ) : (
               ""
             )}
             <div className="card-body">
-              <h2 className="card-title">{user.name}</h2>
+              <h2 className="card-title">{user.full_name}</h2>
               <p>{user?.about_me || "This user has no about me."}</p>
             </div>
           </div>
           <div className="divider">
             <span>
-              More by <span className="italic">{user.name}</span>
+              More by <span className="italic">{user.full_name}</span>
             </span>
           </div>
           <div>
@@ -278,8 +289,8 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                     <StyckerCard
                       image={cardData.image}
                       user={{
-                        name: cardData.user.name,
-                        avatar_url: cardData.user.avatar_url,
+                        name: user.full_name,
+                        avatar_url: user.avatar_url,
                       }}
                       title={cardData.title}
                       description={cardData.description}
@@ -306,24 +317,27 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
 
       <div className="xl:hidden mt-6 grid h-20 flex-auto card  rounded-box place-items-center">
         <div
-          className={`card mx-8 sm:w-2/3 md:w-1/2 border border-${
+          className={`card  mx-8 sm:w-2/3 md:w-1/2 border border-${
             mode === "dark" ? "neutral-focus" : "base-300"
           }`}
         >
-          <figure>
-            <img
-              src="https://img.freepik.com/free-psd/business-man-illustration_1150-59058.jpg?size=626&ext=jpg&uid=R92014609&ga=GA1.1.944852265.1675451112&semt=sph"
-              alt="car!"
-            />
-          </figure>
+          {user.avatar_url && (
+            <figure>
+              <img
+                src={user.avatar_url}
+                className="mt-6 rounded-md"
+                alt={user.full_name + "'s avatar"}
+              />
+            </figure>
+          )}
           <div className="card-body">
-            <h2 className="card-title">{user.name}</h2>
+            <h2 className="card-title">{user.full_name}</h2>
             <p>{user?.about_me || "This user has no about me."}</p>
           </div>
         </div>
         <div className="divider">
           <span>
-            More by <span className="italic">{user.name}</span>
+            More by <span className="italic">{user.full_name}</span>
           </span>
         </div>
         <div>
@@ -334,8 +348,8 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
                   <StyckerCard
                     image={cardData.image}
                     user={{
-                      name: cardData.user.name,
-                      avatar_url: cardData.user.avatar_url,
+                      name: user.full_name,
+                      avatar_url: user.avatar_url,
                     }}
                     title={cardData.title}
                     description={cardData.description}
@@ -358,6 +372,16 @@ export default function ExpandedPage({ styckerData, data, user, error }) {
           </div>
         </Link>
       </div>
+
+      {currentUser && currentUser.id === user.id && (
+        <div className="-mt-20">
+          <Center>
+            <Link className="btn" href={`/edit/${data._id}`}>
+              This Stycker is yours! Wanna edit it?
+            </Link>
+          </Center>
+        </div>
+      )}
     </div>
   ) : (
     <div className="grid h-screen px-4 bg-base-100 place-content-center">

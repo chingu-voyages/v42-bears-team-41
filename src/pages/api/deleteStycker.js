@@ -1,4 +1,4 @@
-pn/* eslint-disable camelcase */
+/* eslint-disable camelcase */
 import { MongoSideProjectCollection } from "../../backend/db/StyckerData/sideProjects";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { easyLoadUserServer } from "../../backend/auth/easyGetUser";
@@ -44,7 +44,9 @@ export default async function handler(req, res) {
   });
 
   if (!oldObject || !oldObject._id)
-    return res.status(404).send("Stycker Not Found");
+    return res
+      .status(404)
+      .json({ error: "not_found", description: "Stycker Not Found" });
   if (!(suuser.id === oldObject.owner_user_id)) {
     return res.status(403).json({
       error: "forbidden",

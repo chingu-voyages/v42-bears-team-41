@@ -29,6 +29,9 @@ export default function SignUpPage() {
       alert(error.message);
     }
     if (data?.user?.id) {
+      alert(
+        "Sign up successful! Check your email for an email confirmation link."
+      );
       // Code to run on successful signup
     }
   }

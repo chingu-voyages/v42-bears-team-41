@@ -22,6 +22,7 @@ import { ObjectId } from "mongodb";
 import validateURL from "valid-url";
 
 import isUrl from "is-valid-http-url";
+import { IconTrash } from "@tabler/icons-react";
 
 export const getServerSideProps = async (ctx) => {
   const spCollection = await MongoSideProjectCollection();
@@ -204,9 +205,40 @@ export default function NewStycker({ data }) {
             {" "}
             These invisible elements allow the dynamic classes to compile{" "}
           </div>
-          <div className="relative inline-flex" style={{ where }}>
-            <div className="indicator-item absolute transform whitespace-nowrap z-10">
-              <button className="btn btn-primary">Apply</button>
+          <div className="relative">
+            <div
+              className="absolute tooltip -top-4 -right-4 z-10"
+              data-tip="Remove this image"
+            >
+              <button
+                type="button"
+                onClick={async () => {
+                  if (imageURL) {
+                    try {
+                      await supabase.storage
+                        .from("styckers")
+                        .remove(rawImageURL);
+                    } catch (e) {
+                      alert(`Error removing image: ${e}`);
+                      return;
+                    }
+                    setRawImageURL(null);
+                    setImageURL(null);
+                    alert("Image removed successfully.");
+                  }
+                }}
+                className="rounded-md p-2 btn-error border-0"
+                style={{
+                  borderWidth: 0,
+                  ...(!imageURL ? { display: "none" } : {}),
+                }}
+              >
+                <IconTrash
+                  className="text-error-content"
+                  style={{ color: "hsl(var(--erc))" }}
+                  size={20}
+                />
+              </button>
             </div>
             <Dropzone
               className={`rounded-xl bg-base-100 hover:bg-base-200 border-[2px] border-dashed border-${
@@ -411,13 +443,16 @@ export default function NewStycker({ data }) {
             <button
               type="button"
               onClick={async () => {
-                const res = await fetch(
-                  `/api/deleteStycker?id=${AlternateData._id}`
-                );
-                if (data.error) {
-                  alert(`${data.error}: ${data.description}`);
-                } else if (data.c) {
-                  alert(`Successfully deleted ${c} styckers.`);
+                const res = await (
+                  await fetch(`/api/deleteStycker?id=${AlternateData._id}`)
+                ).json();
+                if (res.error) {
+                  alert(`${res.error}: ${res.description}`);
+                } else if (res.c) {
+                  alert(`Successfully deleted ${res.c} styckers.`);
+                  router.push("/");
+                } else {
+                  alert("Unknown error deleting stycker, try again later");
                 }
               }}
               className="mt-2 btn btn-block btn-error"

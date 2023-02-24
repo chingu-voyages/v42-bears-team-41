@@ -10,7 +10,10 @@
     "prune": "npx depcheck"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@mantine/core": "^5.10.4",
     "@mantine/dropzone": "^5.10.4",
+    "@mantine/hooks": "^5.10.4",
     "@mui/base": "^5.0.0-alpha.117",
     "@next/font": "13.1.2",
     "@react-hook/hover": "^4.0.0",
