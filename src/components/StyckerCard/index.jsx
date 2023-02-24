@@ -50,7 +50,7 @@ export function StyckerCard({ title, description, user, tags, image }) {
             </div>
             <div className="flex-auto w-[17.5rem]">
               {image ? (
-                <div className="pb-4">
+                <div className="mb-4 card card-bordered rounded-md">
                   <AspectRatio
                     ratio="16/9"
                     style={{

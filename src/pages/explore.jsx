@@ -204,7 +204,7 @@ export default function ExplorePage() {
                     className="flex justify-center"
                   >
                     <StyckerCardWithFixedAdjustableHeight
-                      image={cardData?.image}
+                      image={cardData?.imageURL}
                       user={{
                         name: cardData?.user?.name,
                         avatar_url: cardData?.user?.avatar_url,
