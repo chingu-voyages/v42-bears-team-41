@@ -120,9 +120,8 @@ export default function NewStycker({ data }) {
     setFilters(value);
   };
 
-  const [imageURL, setImageURL] = useState(data.image);
-  const [rawImageURL, setRawImageURL] = useState(null);
-
+  const [imageURL, setImageURL] = useState(data.imageURL ?? null);
+  const [rawImageURL, setRawImageURL] = useState(data?.imageURL?.replace("https://rnndtbcwlmjrcrjtgsgb.supabase.co/storage/v1/object/public/styckers/",""));
   const supabase = useSupabaseClient();
   const supabaseUser = useUser();
 
