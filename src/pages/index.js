@@ -26,7 +26,7 @@ export default function Home() {
     <>
       <div className="hero min-h-screen bg-base-100">
         <div className="hero-content pr-8">
-          <div className="flex">
+          <div className="sm:flex">
             <div className=" flex-auto max-w-lg flex-col">
               <h1 className="text-6xl font-bold">
                 Welcome to <span className="text-accent">Stycker!</span>
