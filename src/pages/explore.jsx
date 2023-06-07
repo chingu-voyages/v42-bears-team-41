@@ -133,7 +133,7 @@ export default function ExplorePage() {
     <>
       <div className="h-20"></div>
       <Center>
-        <h1 className="text-8xl font-bold">
+        <h1 className="text-8xl font-bold md:text-center sm:ml-5">
           Explore <span className="text-secondary-focus">Stycker</span>s
         </h1>
       </Center>
